@@ -1,0 +1,21 @@
+package cn.yusei.jvm.classfile.constantpool;
+
+import java.io.DataInputStream;
+import java.io.IOException;
+
+public class IntegerConstantInfo extends ValueConstantInfo<Integer> {
+	
+	IntegerConstantInfo() {
+	}
+
+	@Override
+	public int getTag() {
+		return ConstantTag.INTEGER;
+	}
+
+	@Override
+	public void readInfo(DataInputStream data) throws IOException {
+		this.value = data.readInt();
+	}
+
+}
