@@ -25,7 +25,8 @@ import cn.yusei.jvm.instruction.constant.ConstInstructions.ICONST_5;
 import cn.yusei.jvm.instruction.constant.ConstInstructions.ICONST_M1;
 import cn.yusei.jvm.instruction.constant.ConstInstructions.LCONST_0;
 import cn.yusei.jvm.instruction.constant.ConstInstructions.LCONST_1;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class ConstInstructionsTest {
 
@@ -49,8 +50,8 @@ public class ConstInstructionsTest {
 
 	private Frame frame;
 
-	private static final int LOCAL_VARS_TABLE_CAPACITY = 10;
-	private static final int OPERAND_STACK_CAPACITY = 10;
+	private static final int MAX_LOCAL_VARS_TABLE_CAPACITY = 10;
+	private static final int MAX_OPERAND_STACK_CAPACITY = 10;
 
 	@Before
 	public void setUp() {
@@ -70,7 +71,7 @@ public class ConstInstructionsTest {
 		lconst_0 = new LCONST_0();
 		lconst_1 = new LCONST_1();
 		reader = null;
-		frame = new Frame(null, LOCAL_VARS_TABLE_CAPACITY, OPERAND_STACK_CAPACITY);
+		frame = new Frame(null, MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 	}
 
 	@Test

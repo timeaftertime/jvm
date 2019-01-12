@@ -3,7 +3,7 @@ package cn.yusei.jvm.classfile.constantpool;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class DoubleConstantInfo extends ValueConstantInfo<Double> {
+public class DoubleConstantInfo extends BaseValueConstantInfo<Double> {
 
 	DoubleConstantInfo() {
 	}
@@ -14,7 +14,7 @@ public class DoubleConstantInfo extends ValueConstantInfo<Double> {
 	}
 
 	@Override
-	public void readInfo(DataInputStream data) throws IOException {
+	public void readInfo(DataInputStream data, ConstantPool pool) throws IOException {
 		this.value = data.readDouble();
 	}
 	

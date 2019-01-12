@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import cn.yusei.jvm.instruction.BytecodeReader;
 import cn.yusei.jvm.instruction.Instruction;
-import cn.yusei.jvm.runtimespace.Frame;
-import cn.yusei.jvm.runtimespace.LocalVarsTable;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.runtimespace.stack.LocalVarsTable;
 
 public class IINC implements Instruction {
 

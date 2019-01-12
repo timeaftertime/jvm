@@ -1,7 +1,7 @@
 package cn.yusei.jvm.instruction.compare;
 
 import cn.yusei.jvm.instruction.base.Int16BranchInstruction;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
 
 public class IfInstructions {
 

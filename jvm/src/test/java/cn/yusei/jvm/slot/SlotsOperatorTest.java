@@ -1,4 +1,4 @@
-package cn.yusei.jvm.runtimespace;
+package cn.yusei.jvm.slot;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -6,6 +6,8 @@ import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import cn.yusei.jvm.ObjectRef;
 
 public class SlotsOperatorTest {
 
@@ -24,7 +26,7 @@ public class SlotsOperatorTest {
 		long var2 = 123456789123L;
 		float var3 = 1234.56f;
 		double var4 = 98765432.1;
-		String var5 = "SlotsOperator";
+		ObjectRef var5 = new ObjectRef();
 		slots.setInt(index, var1);
 		index++;
 		slots.setLong(index, var2);
@@ -51,19 +53,14 @@ public class SlotsOperatorTest {
 	@Test
 	public void illegalIndexAccessError() {
 		try {
-			slots.getInt(1);
+			slots.getInt(-1);
 		}
-		catch (SlotNotSetException e1) {
+		catch (SlotIndexOutOfBoundsException e2) {
 			try {
-				slots.getInt(-1);
+				slots.getInt(SLOTS_CAPACITY);
 			}
-			catch (SlotIndexOutOfBoundsException e2) {
-				try {
-					slots.getInt(SLOTS_CAPACITY);
-				}
-				catch (SlotIndexOutOfBoundsException e3) {
-					return;
-				}
+			catch (SlotIndexOutOfBoundsException e3) {
+				return;
 			}
 		}
 		fail();
@@ -71,7 +68,7 @@ public class SlotsOperatorTest {
 	
 	@Test
 	public void setAndGet() {
-		Slot slot = new Slot(1, this);
+		Slot slot = new Slot(1, null);
 		slots.setSlot(0, slot);
 		assertSame(slot, slots.getSlot(0));
 	}

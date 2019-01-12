@@ -1,9 +1,13 @@
-package cn.yusei.jvm.runtimespace;
+package cn.yusei.jvm.runtimespace.stack;
 
 import static org.junit.Assert.assertSame;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.runtimespace.stack.JVMStack;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class JVMStackTest {
 
@@ -20,7 +24,7 @@ public class JVMStackTest {
 		int len = 10;
 		Frame[] frames = new Frame[len];
 		for(int i=0; i<frames.length; i++)
-			frames[i] = new Frame(null, i, i);
+			frames[i] = new Frame(null, MockFactory.newMethod(i, i));
 		for(int i=0; i<frames.length; i++)
 			stack.push(frames[i]);
 		for(int i=frames.length-1; i>=0; i--)

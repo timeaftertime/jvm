@@ -11,13 +11,14 @@ import cn.yusei.jvm.instruction.control.ControlTestSuite;
 import cn.yusei.jvm.instruction.extend.ExtendTestSuite;
 import cn.yusei.jvm.instruction.load.LoadTestSuite;
 import cn.yusei.jvm.instruction.math.MathTestSuite;
+import cn.yusei.jvm.instruction.reference.ReferenceTestSuite;
 import cn.yusei.jvm.instruction.stack.StackTestSuite;
 import cn.yusei.jvm.instruction.store.StoreTestSuite;
 
 @RunWith(Suite.class)
 @SuiteClasses({ ByteCodeReaderTest.class, ConstantTestSuite.class, LoadTestSuite.class, StoreTestSuite.class,
 		StackTestSuite.class, MathTestSuite.class, CastTestSuite.class, CompareTestSuite.class, ControlTestSuite.class,
-		ExtendTestSuite.class })
+		ExtendTestSuite.class, ReferenceTestSuite.class })
 public class InstructionTestSuite {
 
 }

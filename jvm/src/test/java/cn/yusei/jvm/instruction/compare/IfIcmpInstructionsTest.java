@@ -16,9 +16,10 @@ import cn.yusei.jvm.instruction.compare.IfIcmpInstructions.IF_ICMPLE;
 import cn.yusei.jvm.instruction.compare.IfIcmpInstructions.IF_ICMPLT;
 import cn.yusei.jvm.instruction.compare.IfIcmpInstructions.IF_ICMPNE;
 import cn.yusei.jvm.instruction.compare.IfIcmpInstructions.IF_ICMPX;
-import cn.yusei.jvm.runtimespace.Frame;
-import cn.yusei.jvm.runtimespace.OperandStack;
 import cn.yusei.jvm.runtimespace.ThreadSpace;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.runtimespace.stack.OperandStack;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class IfIcmpInstructionsTest {
 
@@ -27,7 +28,7 @@ public class IfIcmpInstructionsTest {
 	private static final int MAX_OPERAND_STACK_CAPACITY = 16;
 	private Frame frame;
 	private BytecodeReader reader;
-	private byte[] codes = new byte[] {0, 6, 0, 5, 0, 4, 0, 3, 0, 2, 0, 1};
+	private byte[] codes = new byte[] { 0, 6, 0, 5, 0, 4, 0, 3, 0, 2, 0, 1 };
 
 	@Before
 	public void setUp() {
@@ -38,18 +39,19 @@ public class IfIcmpInstructionsTest {
 		ifIcmps[3] = new IF_ICMPLE();
 		ifIcmps[4] = new IF_ICMPGT();
 		ifIcmps[5] = new IF_ICMPGE();
-		frame = new Frame(new ThreadSpace(), MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(new ThreadSpace(),
+				MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 		reader = new BytecodeReader(codes);
 	}
 
 	@Test
 	public void readOperandsAndExecute() throws IOException {
-		for(int i=0; i<6; i++) {
+		for (int i = 0; i < 6; i++) {
 			ifIcmps[i].readOperands(reader);
 			assertEquals((i + 1) * 2, reader.getPc());
 		}
 		OperandStack stack = frame.getOperandStack();
-		for(int i=0; i<6; i++) {
+		for (int i = 0; i < 6; i++) {
 			stack.pushInt(1);
 			stack.pushInt(2);
 		}

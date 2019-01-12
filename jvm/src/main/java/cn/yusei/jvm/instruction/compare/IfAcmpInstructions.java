@@ -1,7 +1,8 @@
 package cn.yusei.jvm.instruction.compare;
 
+import cn.yusei.jvm.ObjectRef;
 import cn.yusei.jvm.instruction.base.Int16BranchInstruction;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
 
 public class IfAcmpInstructions {
 
@@ -12,14 +13,14 @@ public class IfAcmpInstructions {
 			return fitCondition(frame.getOperandStack().popRef(), frame.getOperandStack().popRef());
 		}
 
-		protected abstract boolean fitCondition(Object op1, Object op2);
+		protected abstract boolean fitCondition(ObjectRef op1, ObjectRef op2);
 
 	}
 
 	public static class IF_ACMPEQ extends IF_ACMPX {
 
 		@Override
-		protected boolean fitCondition(Object op1, Object op2) {
+		protected boolean fitCondition(ObjectRef op1, ObjectRef op2) {
 			return op2 == op1;
 		}
 
@@ -28,7 +29,7 @@ public class IfAcmpInstructions {
 	public static class IF_ACMPNE extends IF_ACMPX {
 
 		@Override
-		protected boolean fitCondition(Object op1, Object op2) {
+		protected boolean fitCondition(ObjectRef op1, ObjectRef op2) {
 			return op2 != op1;
 		}
 

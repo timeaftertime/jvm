@@ -10,7 +10,7 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
-import cn.yusei.jvm.classfile.ClassMetaData;
+import cn.yusei.jvm.classfile.ClassMetadata;
 import cn.yusei.jvm.classfile.constantpool.ClassConstantInfo;
 import cn.yusei.jvm.classfile.constantpool.ConstantPool;
 import cn.yusei.jvm.classfile.constantpool.DoubleConstantInfo;
@@ -26,9 +26,9 @@ import cn.yusei.jvm.classfile.constantpool.UTF8ConstantInfo;
 public class ClassMetadataTest {
 
 	private static final String MAGIC_NUMBER = "CAFEBABE";
-	private ClassMetaData helloMetaData;
-	private ClassMetaData classTestMetaData;
-	private ClassMetaData addMetaData;
+	private ClassMetadata helloMetaData;
+	private ClassMetadata classTestMetaData;
+	private ClassMetadata addMetaData;
 
 	{
 		try {
@@ -40,9 +40,9 @@ public class ClassMetadataTest {
 		}
 	}
 
-	private static ClassMetaData getClassMetadata(String url) throws IOException {
+	private static ClassMetadata getClassMetadata(String url) throws IOException {
 		byte[] data = getClassFileBytes(url);
-		return new ClassMetaData(data);
+		return new ClassMetadata(data);
 	}
 
 	private static byte[] getClassFileBytes(String url) throws IOException {
@@ -59,7 +59,7 @@ public class ClassMetadataTest {
 		assertEquals(MAGIC_NUMBER, helloMetaData.getMagicNumber());
 		data[0] += 1;
 		try {
-			new ClassMetaData(data);
+			new ClassMetadata(data);
 		} catch (ClassFormatError e) {
 			return;
 		}
@@ -73,7 +73,7 @@ public class ClassMetadataTest {
 		assertEquals(0, helloMetaData.getMinorVersion());
 		data[7] = 60;
 		try {
-			new ClassMetaData(data);
+			new ClassMetadata(data);
 		} catch (UnsupportedClassVersionError e) {
 			return;
 		}
@@ -101,7 +101,7 @@ public class ClassMetadataTest {
 		ClassConstantInfo info5 = pool.getClassInfo(5);
 		assertEquals(50, info5.getNameIndex());
 		UTF8ConstantInfo info7 = pool.getUTF8(7);
-		assertEquals("FLAG", info7.getInfo());
+		assertEquals("FLAG", info7.getValue());
 		IntegerConstantInfo info10 = pool.getIntegerInfo(10);
 		assertEquals(Integer.valueOf(1), info10.getValue());
 		LongConstantInfo info25 = pool.getLongInfo(25);

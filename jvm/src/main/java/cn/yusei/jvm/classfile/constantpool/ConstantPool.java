@@ -16,7 +16,7 @@ public class ConstantPool {
 			// 1 个字节的常量类型
 			int tag = data.readUnsignedByte();
 			infos[i] = ConstantInfoFactory.createConstantInfo(tag);
-			infos[i].readInfo(data);
+			infos[i].readInfo(data, this);
 			switch (infos[i].getTag()) {
 				case ConstantTag.LONG:
 				case ConstantTag.DOUBLE:

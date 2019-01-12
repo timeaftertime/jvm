@@ -1,5 +1,6 @@
 package cn.yusei.jvm.classfile;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class ClassReaderTest {
 	@Before
 	public void setUp() {
 		classPaths = new ArrayList<>();
-		classPaths.addAll(Arrays.asList(System.getenv("classpath").split(";")));
+		classPaths.addAll(Arrays.asList(System.getenv("JAVA_HOME") + "/jre/lib/rt.jar"));
 	}
 
 	@Test
@@ -33,6 +34,11 @@ public class ClassReaderTest {
 		is.read(expectedData);
 		is.close();
 		assertTrue(Arrays.equals(expectedData, classData));
+	}
+	
+	@Test
+	public void readFromJarFile() throws ClassNotFoundException, IOException {
+		assertNotNull(new ClassReader(classPaths.toArray(new String[0])).readClass("java.lang.Object"));
 	}
 	
 }

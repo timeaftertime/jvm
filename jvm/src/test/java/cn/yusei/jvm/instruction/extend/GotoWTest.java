@@ -9,8 +9,9 @@ import org.junit.Test;
 
 import cn.yusei.jvm.instruction.BytecodeReader;
 import cn.yusei.jvm.instruction.base.Int32BranchInstruction;
-import cn.yusei.jvm.runtimespace.Frame;
 import cn.yusei.jvm.runtimespace.ThreadSpace;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class GotoWTest {
 
@@ -19,15 +20,16 @@ public class GotoWTest {
 	private static final int MAX_OPERAND_STACK_CAPACITY = 16;
 	private Frame frame;
 	private BytecodeReader reader;
-	private byte[] codes = new byte[] {0, 0, 0, 20};
-	
+	private byte[] codes = new byte[] { 0, 0, 0, 20 };
+
 	@Before
 	public void setUp() {
 		gotoW = new GOTO_W();
-		frame = new Frame(new ThreadSpace(), MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(new ThreadSpace(),
+				MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 		reader = new BytecodeReader(codes);
 	}
-	
+
 	@Test
 	public void readOperandsAndExecute() throws IOException {
 		gotoW.readOperands(reader);
@@ -36,5 +38,5 @@ public class GotoWTest {
 		frame.synchronizedThreadSpacePc();
 		assertEquals(20, frame.getThreadSpace().getPc());
 	}
-	
+
 }

@@ -8,7 +8,8 @@ import org.junit.Test;
 import cn.yusei.jvm.instruction.base.NoOperandInstruction;
 import cn.yusei.jvm.instruction.math.AndInstructions.IAND;
 import cn.yusei.jvm.instruction.math.AndInstructions.LAND;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class AndInstructionsTest {
 
@@ -22,7 +23,7 @@ public class AndInstructionsTest {
 		ands = new NoOperandInstruction[2];
 		ands[0] = new IAND();
 		ands[1] = new LAND();
-		frame = new Frame(null, MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(null, MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 	}
 
 	@Test
@@ -38,5 +39,5 @@ public class AndInstructionsTest {
 		ands[1].execute(frame);
 		assertEquals(-8L & 3L, frame.getOperandStack().popLong());
 	}
-	
+
 }

@@ -1,7 +1,7 @@
 package cn.yusei.jvm.instruction.stack;
 
 import cn.yusei.jvm.instruction.base.NoOperandInstruction;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
 
 public class PopInstructions {
 

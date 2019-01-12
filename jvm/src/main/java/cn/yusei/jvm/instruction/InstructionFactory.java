@@ -116,6 +116,16 @@ import cn.yusei.jvm.instruction.math.SubInstructions.ISUB;
 import cn.yusei.jvm.instruction.math.SubInstructions.LSUB;
 import cn.yusei.jvm.instruction.math.XorInstructions.IXOR;
 import cn.yusei.jvm.instruction.math.XorInstructions.LXOR;
+import cn.yusei.jvm.instruction.reference.CHECK_CAST;
+import cn.yusei.jvm.instruction.reference.GET_FIELD;
+import cn.yusei.jvm.instruction.reference.GET_STATIC;
+import cn.yusei.jvm.instruction.reference.INSTANCE_OF;
+import cn.yusei.jvm.instruction.reference.LdcInstructions.LDC;
+import cn.yusei.jvm.instruction.reference.LdcInstructions.LDC2_W;
+import cn.yusei.jvm.instruction.reference.LdcInstructions.LDC_W;
+import cn.yusei.jvm.instruction.reference.NEW;
+import cn.yusei.jvm.instruction.reference.PUT_FIELD;
+import cn.yusei.jvm.instruction.reference.PUT_STATIC;
 import cn.yusei.jvm.instruction.stack.DupInstructions.DUP;
 import cn.yusei.jvm.instruction.stack.DupInstructions.DUP2;
 import cn.yusei.jvm.instruction.stack.DupInstructions.DUP2_X1;
@@ -345,12 +355,12 @@ public final class InstructionFactory {
 			return new BIPUSH();
 		case 0x11:
 			return new SIPUSH();
-		// case 0x12:
-		// return new LDC();
-		// case 0x13:
-		// return new LDC_W();
-		// case 0x14:
-		// return new LDC2_W();
+		 case 0x12:
+		 return new LDC();
+		 case 0x13:
+		 return new LDC_W();
+		 case 0x14:
+		 return new LDC2_W();
 		case 0x15:
 			return new ILOAD();
 		case 0x16:
@@ -665,14 +675,14 @@ public final class InstructionFactory {
 		// return NoOperandInstructionsHolder.areturn;
 		// case 0xb1:
 		// return NoOperandInstructionsHolder._return;
-		// case 0xb2:
-		// return new GET_STATIC();
-		// case 0xb3:
-		// return new PUT_STATIC();
-		// case 0xb4:
-		// return new GET_FIELD();
-		// case 0xb5:
-		// return new PUT_FIELD();
+		 case 0xb2:
+		 return new GET_STATIC();
+		 case 0xb3:
+		 return new PUT_STATIC();
+		 case 0xb4:
+		 return new GET_FIELD();
+		 case 0xb5:
+		 return new PUT_FIELD();
 		// case 0xb6:
 		// return new INVOKE_VIRTUAL();
 		// case 0xb7:
@@ -683,8 +693,8 @@ public final class InstructionFactory {
 		// return new INVOKE_INTERFACE();
 		// case 0xba:
 		// return new INVOKE_DYNAMIC();
-		// case 0xbb:
-		// return new NEW();
+		 case 0xbb:
+		 return new NEW();
 		// case 0xbc:
 		// return new NEW_ARRAY();
 		// case 0xbd:
@@ -693,10 +703,10 @@ public final class InstructionFactory {
 		// return NoOperandInstructionsHolder.arraylength;
 		// case 0xbf:
 		// return NoOperandInstructionsHolder.athrow;
-		// case 0xc0:
-		// return new CHECK_CAST();
-		// case 0xc1:
-		// return new INSTANCE_OF();
+		 case 0xc0:
+		 return new CHECK_CAST();
+		 case 0xc1:
+		 return new INSTANCE_OF();
 		// case 0xc2:
 		// return NoOperandInstructionsHolder.monitorenter;
 		// case 0xc3:

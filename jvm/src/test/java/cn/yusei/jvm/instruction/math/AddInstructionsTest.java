@@ -10,7 +10,8 @@ import cn.yusei.jvm.instruction.math.AddInstructions.DADD;
 import cn.yusei.jvm.instruction.math.AddInstructions.FADD;
 import cn.yusei.jvm.instruction.math.AddInstructions.IADD;
 import cn.yusei.jvm.instruction.math.AddInstructions.LADD;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class AddInstructionsTest {
 
@@ -26,7 +27,7 @@ public class AddInstructionsTest {
 		adds[1] = new LADD();
 		adds[2] = new FADD();
 		adds[3] = new DADD();
-		frame =  new Frame(null, MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(null, MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 	}
 	
 	@Test

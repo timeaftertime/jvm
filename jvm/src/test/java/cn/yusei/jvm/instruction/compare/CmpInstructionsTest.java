@@ -11,8 +11,9 @@ import cn.yusei.jvm.instruction.compare.CmpInstructions.DCMPL;
 import cn.yusei.jvm.instruction.compare.CmpInstructions.FCMPG;
 import cn.yusei.jvm.instruction.compare.CmpInstructions.FCMPL;
 import cn.yusei.jvm.instruction.compare.CmpInstructions.LCMP;
-import cn.yusei.jvm.runtimespace.Frame;
-import cn.yusei.jvm.runtimespace.OperandStack;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.runtimespace.stack.OperandStack;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class CmpInstructionsTest {
 
@@ -29,7 +30,7 @@ public class CmpInstructionsTest {
 		xcmpxs[2] = new FCMPL();
 		xcmpxs[3] = new DCMPG();
 		xcmpxs[4] = new DCMPL();
-		frame = new Frame(null, MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(null, MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 	}
 	
 	@Test

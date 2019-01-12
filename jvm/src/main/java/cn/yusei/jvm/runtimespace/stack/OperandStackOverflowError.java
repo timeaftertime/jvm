@@ -1,4 +1,4 @@
-package cn.yusei.jvm.runtimespace;
+package cn.yusei.jvm.runtimespace.stack;
 
 public class OperandStackOverflowError extends Error {
 

@@ -3,10 +3,8 @@ package cn.yusei.jvm.classfile.constantpool;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class UTF8ConstantInfo implements ConstantInfo {
+public class UTF8ConstantInfo extends BaseValueConstantInfo<String> {
 
-	private String info;
-	
 	UTF8ConstantInfo() {
 	}
 
@@ -16,14 +14,10 @@ public class UTF8ConstantInfo implements ConstantInfo {
 	}
 
 	@Override
-	public void readInfo(DataInputStream data) throws IOException {
+	public void readInfo(DataInputStream data, ConstantPool pool) throws IOException {
 		// 2 个字节无符号数
 		// length 个字节的 MUTF8 编码的字符串
-		info = data.readUTF();
-	}
-
-	public String getInfo() {
-		return info;
+		value = data.readUTF();
 	}
 
 }

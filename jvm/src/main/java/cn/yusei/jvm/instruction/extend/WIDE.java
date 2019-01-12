@@ -16,7 +16,7 @@ import cn.yusei.jvm.instruction.store.StoreInstructions.DSTORE;
 import cn.yusei.jvm.instruction.store.StoreInstructions.FSTORE;
 import cn.yusei.jvm.instruction.store.StoreInstructions.ISTORE;
 import cn.yusei.jvm.instruction.store.StoreInstructions.LSTORE;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
 
 public class WIDE implements Instruction {
 

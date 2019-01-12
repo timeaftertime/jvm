@@ -1,8 +1,10 @@
-package cn.yusei.jvm.runtimespace;
+package cn.yusei.jvm.slot;
 
-public class LocalVarsTable extends SlotsOperator {
+import cn.yusei.jvm.ObjectRef;
 
-	public LocalVarsTable(int capacity) {
+public class BaseSlotOperator extends SlotsOperator {
+
+	public BaseSlotOperator(int capacity) {
 		super(capacity);
 	}
 
@@ -27,7 +29,7 @@ public class LocalVarsTable extends SlotsOperator {
 	}
 
 	@Override
-	public void setRef(int index, Object ref) {
+	public void setRef(int index, ObjectRef ref) {
 		super.setRef(index, ref);
 	}
 
@@ -52,7 +54,7 @@ public class LocalVarsTable extends SlotsOperator {
 	}
 
 	@Override
-	public Object getRef(int index) {
+	public ObjectRef getRef(int index) {
 		return super.getRef(index);
 	}
 }

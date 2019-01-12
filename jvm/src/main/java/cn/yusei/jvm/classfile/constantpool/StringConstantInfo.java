@@ -3,9 +3,10 @@ package cn.yusei.jvm.classfile.constantpool;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class StringConstantInfo implements ConstantInfo {
+public class StringConstantInfo extends ValueConstantInfo<String> {
 
 	private int index;
+	private ConstantPool constantPool;
 	
 	StringConstantInfo() {
 	}
@@ -16,12 +17,18 @@ public class StringConstantInfo implements ConstantInfo {
 	}
 
 	@Override
-	public void readInfo(DataInputStream data) throws IOException {
+	public void readInfo(DataInputStream data, ConstantPool pool) throws IOException {
 		index = data.readUnsignedShort();
+		constantPool = pool;
 	}
 
 	public int getIndex() {
 		return index;
+	}
+
+	@Override
+	public String getValue() {
+		return constantPool.getUTF8(index).getValue();
 	}
 	
 }

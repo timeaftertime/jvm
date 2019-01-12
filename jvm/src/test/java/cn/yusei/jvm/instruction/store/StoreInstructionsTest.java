@@ -1,12 +1,14 @@
 package cn.yusei.jvm.instruction.store;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import cn.yusei.jvm.ObjectRef;
 import cn.yusei.jvm.instruction.BytecodeReader;
 import cn.yusei.jvm.instruction.base.NoOperandInstruction;
 import cn.yusei.jvm.instruction.base.UInt8Instruction;
@@ -35,7 +37,8 @@ import cn.yusei.jvm.instruction.store.StoreInstructions.LSTORE_0;
 import cn.yusei.jvm.instruction.store.StoreInstructions.LSTORE_1;
 import cn.yusei.jvm.instruction.store.StoreInstructions.LSTORE_2;
 import cn.yusei.jvm.instruction.store.StoreInstructions.LSTORE_3;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class StoreInstructionsTest {
 
@@ -89,7 +92,7 @@ public class StoreInstructionsTest {
 		astore_x[2] = new ASTORE_2();
 		astore_x[3] = new ASTORE_3();
 
-		frame = new Frame(null, MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(null, MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 		reader = new BytecodeReader(codes);
 	}
 
@@ -157,11 +160,11 @@ public class StoreInstructionsTest {
 		dstore.execute(frame);
 		assertEquals(Double.longBitsToDouble(0x0000000100000002L), frame.getLocalVarsTable().getDouble(5), delta);
 		astore.execute(frame);
-		assertEquals(this, frame.getLocalVarsTable().getRef(5));
+		assertSame(null, frame.getLocalVarsTable().getRef(5));
 	}
 
 	private void initOperandStack() {
-		frame.getOperandStack().pushRef(this);
+		frame.getOperandStack().pushRef(null);
 		for (int i = 1; i <= 6; i++)
 			frame.getOperandStack().pushInt(i);
 	}
@@ -192,11 +195,14 @@ public class StoreInstructionsTest {
 			dstore_x[i].execute(frame);
 			assertEquals(Double.valueOf(i), frame.getLocalVarsTable().getDouble(i), delta);
 		}
-		for (int i = 0; i < 4; i++)
-			frame.getOperandStack().pushRef("StoreInstructions" + (3 - i));
+		ObjectRef[] refs = new ObjectRef[4];
+		for (int i = 0; i < 4; i++) {
+			refs[i] = new ObjectRef();
+			frame.getOperandStack().pushRef(refs[i]);
+		}
 		for (int i = 0; i < 4; i++) {
 			astore_x[i].execute(frame);
-			assertEquals("StoreInstructions" + i, frame.getLocalVarsTable().getRef(i));
+			assertEquals(refs[3 - i], frame.getLocalVarsTable().getRef(i));
 		}
 	}
 

@@ -11,9 +11,10 @@ import cn.yusei.jvm.instruction.BytecodeReader;
 import cn.yusei.jvm.instruction.control.SwitchInstructions.LOOKUP_SWITCH;
 import cn.yusei.jvm.instruction.control.SwitchInstructions.SwitchInstruction;
 import cn.yusei.jvm.instruction.control.SwitchInstructions.TABLE_SWITCH;
-import cn.yusei.jvm.runtimespace.Frame;
-import cn.yusei.jvm.runtimespace.OperandStack;
 import cn.yusei.jvm.runtimespace.ThreadSpace;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.runtimespace.stack.OperandStack;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class SwitchInstructionsTest {
 
@@ -23,17 +24,19 @@ public class SwitchInstructionsTest {
 	private static final int MAX_OPERAND_STACK_CAPACITY = 16;
 	private Frame frame;
 	private BytecodeReader reader;
-	private byte[] codes = new byte[] {0, 1, 2, 3, 0, 0, 0, 0x7a, 0, 0, 0, 0x0, 0, 0, 0, 0x2, 0, 0, 0, 0x1, 0, 0, 0, 0x1, 0, 0, 0, 0x1,
-			0, 1, 2, 3, 0, 0, 0, 0x7a, 0, 0, 0, 0x3, 0, 0, 0, 0x0, 0, 0, 0, 0x1, 0, 0, 0, 0x1, 0, 0, 0, 0x1, 0, 0, 0, 0x2, 0, 0, 0, 0x1};
-	
+	private byte[] codes = new byte[] { 0, 1, 2, 3, 0, 0, 0, 0x7a, 0, 0, 0, 0x0, 0, 0, 0, 0x2, 0, 0, 0, 0x1, 0, 0, 0,
+			0x1, 0, 0, 0, 0x1, 0, 1, 2, 3, 0, 0, 0, 0x7a, 0, 0, 0, 0x3, 0, 0, 0, 0x0, 0, 0, 0, 0x1, 0, 0, 0, 0x1, 0, 0,
+			0, 0x1, 0, 0, 0, 0x2, 0, 0, 0, 0x1 };
+
 	@Before
 	public void setUp() {
 		tableSwitch = new TABLE_SWITCH();
 		lookupSwitch = new LOOKUP_SWITCH();
-		frame = new Frame(new ThreadSpace(), MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(new ThreadSpace(),
+				MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 		reader = new BytecodeReader(codes);
 	}
-	
+
 	@Test
 	public void readOperandsAndExecute() throws IOException {
 		reader.readInt8();
@@ -48,7 +51,7 @@ public class SwitchInstructionsTest {
 		tableSwitch.execute(frame);
 		frame.synchronizedThreadSpacePc();
 		assertEquals(0x7a, frame.getThreadSpace().getPc());
-		for(int i=0 ;i<3; i++) {
+		for (int i = 0; i < 3; i++) {
 			stack.pushInt(i);
 			tableSwitch.execute(frame);
 			frame.synchronizedThreadSpacePc();
@@ -60,12 +63,12 @@ public class SwitchInstructionsTest {
 		lookupSwitch.execute(frame);
 		frame.synchronizedThreadSpacePc();
 		assertEquals(0x7a, frame.getThreadSpace().getPc());
-		for(int i=0; i<3; i++) {
+		for (int i = 0; i < 3; i++) {
 			stack.pushInt(i);
 			lookupSwitch.execute(frame);
 			frame.synchronizedThreadSpacePc();
 			assertEquals(0x7a + i + 1, frame.getThreadSpace().getPc());
 		}
 	}
-	
+
 }

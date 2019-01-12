@@ -1,7 +1,7 @@
 package cn.yusei.jvm.instruction.extend;
 
 import cn.yusei.jvm.instruction.base.Int32BranchInstruction;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
 
 public class GOTO_W extends Int32BranchInstruction {
 

@@ -9,7 +9,7 @@ import cn.yusei.jvm.classfile.member.ClassMember;
 import cn.yusei.jvm.classfile.member.ClassMemberUtil;
 import cn.yusei.jvm.classfile.member.attribute.Attribute;
 
-public class ClassMetaData {
+public class ClassMetadata {
 
 	private static final String MAGIC_NUMBER = "CAFEBABE";
 	private int majorVersion;
@@ -23,7 +23,7 @@ public class ClassMetaData {
 	private ClassMember methodMembers[];
 	private Attribute[] attributes;
 
-	public ClassMetaData(byte[] classData) throws IOException {
+	public ClassMetadata(byte[] classData) throws IOException {
 		try (DataInputStream data = new DataInputStream(new ByteArrayInputStream(classData))) {
 			// 4 个字节魔数
 			readAndCheckMagicNumber(data);
@@ -165,7 +165,8 @@ public class ClassMetaData {
 
 	public ClassMember getFieldClassMember(String name, String descriptor) {
 		for (ClassMember member : fieldMembers) {
-			if (member.getName().equals(name) && member.getDescriptor().equals(descriptor))
+			if (constantPool.getUTF8(member.getNameIndex()).getValue().equals(name)
+					&& constantPool.getUTF8(member.getDescriptorIndex()).getValue().equals(descriptor))
 				return member;
 		}
 		return null;
@@ -173,7 +174,8 @@ public class ClassMetaData {
 
 	public ClassMember getMethodClassMember(String name, String descriptor) {
 		for (ClassMember member : methodMembers) {
-			if (member.getName().equals(name) && member.getDescriptor().equals(descriptor))
+			if (constantPool.getUTF8(member.getNameIndex()).getValue().equals(name)
+					&& constantPool.getUTF8(member.getDescriptorIndex()).getValue().equals(descriptor))
 				return member;
 		}
 		return null;
@@ -181,6 +183,18 @@ public class ClassMetaData {
 
 	public int getAttributeCount() {
 		return attributes.length;
+	}
+
+	public int getInterfaceIndex(int index) {
+		return interfacesIndex[index];
+	}
+
+	public ClassMember getFieldClassMember(int index) {
+		return fieldMembers[index];
+	}
+
+	public ClassMember getMethodClassMember(int index) {
+		return methodMembers[index];
 	}
 
 }

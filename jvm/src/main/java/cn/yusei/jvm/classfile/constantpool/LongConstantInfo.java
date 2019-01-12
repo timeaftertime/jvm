@@ -3,7 +3,7 @@ package cn.yusei.jvm.classfile.constantpool;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class LongConstantInfo extends ValueConstantInfo<Long> {
+public class LongConstantInfo extends BaseValueConstantInfo<Long> {
 
 	LongConstantInfo() {
 	}
@@ -14,7 +14,7 @@ public class LongConstantInfo extends ValueConstantInfo<Long> {
 	}
 
 	@Override
-	public void readInfo(DataInputStream data) throws IOException {
+	public void readInfo(DataInputStream data, ConstantPool pool) throws IOException {
 		this.value = data.readLong();
 	}
 	

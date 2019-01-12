@@ -1,4 +1,4 @@
-package cn.yusei.jvm.runtimespace;
+package cn.yusei.jvm.runtimespace.stack;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -6,6 +6,12 @@ import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import cn.yusei.jvm.ObjectRef;
+import cn.yusei.jvm.runtimespace.stack.OperandStack;
+import cn.yusei.jvm.runtimespace.stack.OperandStackEmptyError;
+import cn.yusei.jvm.runtimespace.stack.OperandStackOverflowError;
+import cn.yusei.jvm.slot.Slot;
 
 public class OperandStackTest {
 
@@ -23,7 +29,7 @@ public class OperandStackTest {
 		long var2 = 12345678901L;
 		float var3 = 3.14f;
 		double var4 = 3.1415926;
-		String var5 = "OperandStack";
+		ObjectRef var5 = new ObjectRef();
 		double delta = 0.01;
 		operandStack.pushInt(var1);
 		operandStack.pushLong(var2);
@@ -56,10 +62,10 @@ public class OperandStackTest {
 
 	@Test
 	public void pushAndPopSlot() {
-		operandStack.pushSlot(new Slot(1, this));
+		operandStack.pushSlot(new Slot(1, null));
 		Slot slot = operandStack.popSlot();
 		assertEquals(1, slot.getValue());
-		assertSame(this, slot.getRef());
+		assertSame(null, slot.getRef());
 	}
 	
 }

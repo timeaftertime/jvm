@@ -13,7 +13,7 @@ public class MethodTypeConstantInfo implements ConstantInfo {
 	}
 
 	@Override
-	public void readInfo(DataInputStream data) {
+	public void readInfo(DataInputStream data, ConstantPool pool) {
 		throw new RuntimeException("暂未实现该常量类型");
 	}
 

@@ -1,4 +1,6 @@
-package cn.yusei.jvm.runtimespace;
+package cn.yusei.jvm.slot;
+
+import cn.yusei.jvm.ObjectRef;
 
 public abstract class SlotsOperator {
 
@@ -6,6 +8,8 @@ public abstract class SlotsOperator {
 	
 	public SlotsOperator(int capacity) {
 		this.slots = new Slot[capacity];
+		for(int i=0; i<capacity; i++)
+			slots[i] = new Slot(0, null);
 	}
 
 	protected void setInt(int index, int value) {
@@ -27,23 +31,23 @@ public abstract class SlotsOperator {
 		setLong(index, Double.doubleToRawLongBits(value));
 	}
 
-	protected void setRef(int index, Object ref) {
+	protected void setRef(int index, ObjectRef ref) {
 		accessIndexCheck(index, 0);
 		slots[index] = new Slot(0, ref);
 	}
 
-	protected Object getRef(int index) {
-		readIndexCheck(index, 0);
+	protected ObjectRef getRef(int index) {
+		accessIndexCheck(index, 0);
 		return slots[index].getRef();
 	}
 
 	protected int getInt(int index) {
-		readIndexCheck(index, 0);
+		accessIndexCheck(index, 0);
 		return slots[index].getValue();
 	}
 	
 	protected long getLong(int index) {
-		readIndexCheck(index, 1);
+		accessIndexCheck(index, 1);
 		return ((long) getInt(index) << 32) | (getInt(index + 1) & 0xFFFFFFFFL);
 	}
 	
@@ -63,15 +67,6 @@ public abstract class SlotsOperator {
 			throw new SlotIndexOutOfBoundsException(endIndex);
 	}
 	
-	private void readIndexCheck(int startIndex, int space) {
-		accessIndexCheck(startIndex, space);
-		int endIndex = startIndex + space;
-		for(int i=startIndex; i<=endIndex; i++) {
-			if(slots[i] == null)
-				throw new SlotNotSetException(i);
-		}
-	}
-	
 	public int getCapacity() {
 		return slots.length;
 	}
@@ -82,7 +77,7 @@ public abstract class SlotsOperator {
 	}
 
 	protected Slot getSlot(int index) {
-		readIndexCheck(index, 0);
+		accessIndexCheck(index, 0);
 		return slots[index];
 	}
 

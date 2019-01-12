@@ -9,7 +9,8 @@ import cn.yusei.jvm.instruction.base.NoOperandInstruction;
 import cn.yusei.jvm.instruction.cast.I2Instructions.I2D;
 import cn.yusei.jvm.instruction.cast.I2Instructions.I2F;
 import cn.yusei.jvm.instruction.cast.I2Instructions.I2L;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class I2InstructionsTest {
 
@@ -24,7 +25,7 @@ public class I2InstructionsTest {
 		i2xs[0] = new I2L();
 		i2xs[1] = new I2F();
 		i2xs[2] = new I2D();
-		frame =  new Frame(null, MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(null, MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 	}
 	
 	@Test

@@ -9,7 +9,8 @@ import org.junit.Test;
 
 import cn.yusei.jvm.instruction.BytecodeReader;
 import cn.yusei.jvm.instruction.Instruction;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class IINCTest {
 
@@ -18,15 +19,15 @@ public class IINCTest {
 	private static final int MAX_OPERAND_STACK_CAPACITY = 16;
 	private Frame frame;
 	private BytecodeReader reader;
-	private byte[] codes = new byte[] { 1, 10};
-	
+	private byte[] codes = new byte[] { 1, 10 };
+
 	@Before
 	public void setUp() {
 		iinc = new IINC();
-		frame =  new Frame(null, MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(null, MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 		reader = new BytecodeReader(codes);
 	}
-	
+
 	@Test
 	public void readerOperandsAndExecute() throws IOException {
 		iinc.readOperands(reader);

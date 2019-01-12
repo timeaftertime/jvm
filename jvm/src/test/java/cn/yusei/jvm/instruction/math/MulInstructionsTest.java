@@ -10,15 +10,16 @@ import cn.yusei.jvm.instruction.math.MulInstructions.DMUL;
 import cn.yusei.jvm.instruction.math.MulInstructions.FMUL;
 import cn.yusei.jvm.instruction.math.MulInstructions.IMUL;
 import cn.yusei.jvm.instruction.math.MulInstructions.LMUL;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class MulInstructionsTest {
-	
+
 	private NoOperandInstruction[] muls;
 	private static final int MAX_LOCAL_VARS_TABLE_CAPACITY = 7;
 	private static final int MAX_OPERAND_STACK_CAPACITY = 16;
 	private Frame frame;
-	
+
 	@Before
 	public void setUp() {
 		muls = new NoOperandInstruction[4];
@@ -26,13 +27,13 @@ public class MulInstructionsTest {
 		muls[1] = new LMUL();
 		muls[2] = new FMUL();
 		muls[3] = new DMUL();
-		frame =  new Frame(null, MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(null, MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 	}
-	
+
 	@Test
 	public void readOperandsAndExecute() {
 		double delta = 0.01;
-		for(int i=0; i<4; i++)
+		for (int i = 0; i < 4; i++)
 			muls[i].readOperands(null);
 		frame.getOperandStack().pushInt(2);
 		frame.getOperandStack().pushInt(1);

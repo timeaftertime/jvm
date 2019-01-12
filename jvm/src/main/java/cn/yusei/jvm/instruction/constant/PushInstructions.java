@@ -2,7 +2,7 @@ package cn.yusei.jvm.instruction.constant;
 
 import cn.yusei.jvm.instruction.base.Int16Instruction;
 import cn.yusei.jvm.instruction.base.Int8Instrcution;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
 
 public class PushInstructions {
 

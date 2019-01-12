@@ -1,8 +1,8 @@
 package cn.yusei.jvm.instruction.math;
 
 import cn.yusei.jvm.instruction.base.NoOperandInstruction;
-import cn.yusei.jvm.runtimespace.Frame;
-import cn.yusei.jvm.runtimespace.OperandStack;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.runtimespace.stack.OperandStack;
 
 public class AndInstructions {
 	

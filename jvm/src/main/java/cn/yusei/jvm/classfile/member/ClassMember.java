@@ -7,6 +7,7 @@ import cn.yusei.jvm.classfile.AccessMask;
 import cn.yusei.jvm.classfile.constantpool.ConstantPool;
 import cn.yusei.jvm.classfile.member.attribute.Attribute;
 import cn.yusei.jvm.classfile.member.attribute.CodeAttribute;
+import cn.yusei.jvm.classfile.member.attribute.ConstantValueAttribute;
 
 public class ClassMember {
 
@@ -14,22 +15,12 @@ public class ClassMember {
 	protected int nameIndex;
 	protected int descriptorIndex;
 	protected Attribute[] attributes;
-	private ConstantPool constantPool;
 	
 	public ClassMember(DataInputStream data, ConstantPool constantPool) throws IOException {
 		accessMask = new AccessMask(data.readUnsignedShort());
 		nameIndex = data.readUnsignedShort();
 		descriptorIndex = data.readUnsignedShort();
-		this.constantPool = constantPool;
 		attributes = ClassMemberUtil.readAttributes(data, constantPool);
-	}
-	
-	public String getName() {
-		return constantPool.getUTF8(nameIndex).getInfo();
-	}
-	
-	public String getDescriptor() {
-		return constantPool.getUTF8(descriptorIndex).getInfo();
 	}
 	
 	public CodeAttribute getCodeAttribute() {
@@ -38,6 +29,25 @@ public class ClassMember {
 				return (CodeAttribute) attribute;
 		}
 		return null;
+	}
+	public ConstantValueAttribute getConstantValueAttribute() {
+		for(Attribute attribute : attributes) {
+			if(attribute instanceof ConstantValueAttribute)
+				return (ConstantValueAttribute) attribute;
+		}
+		return null;
+	}
+
+	public AccessMask getAccessMask() {
+		return accessMask;
+	}
+
+	public int getNameIndex() {
+		return nameIndex;
+	}
+
+	public int getDescriptorIndex() {
+		return descriptorIndex;
 	}
 	
 }

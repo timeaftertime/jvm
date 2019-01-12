@@ -1,4 +1,8 @@
-package cn.yusei.jvm.runtimespace;
+package cn.yusei.jvm.runtimespace.stack;
+
+import cn.yusei.jvm.ObjectRef;
+import cn.yusei.jvm.slot.Slot;
+import cn.yusei.jvm.slot.SlotsOperator;
 
 public class OperandStack extends SlotsOperator {
 
@@ -29,7 +33,7 @@ public class OperandStack extends SlotsOperator {
 		pushLong(Double.doubleToLongBits(value));
 	}
 
-	public void pushRef(Object ref) {
+	public void pushRef(ObjectRef ref) {
 		pushCheck(0);
 		setRef(size, ref);
 		size++;
@@ -55,7 +59,7 @@ public class OperandStack extends SlotsOperator {
 		return Double.longBitsToDouble(popLong());
 	}
 
-	public Object popRef() {
+	public ObjectRef popRef() {
 		popCheck(1);
 		size--;
 		return getRef(size);

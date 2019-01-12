@@ -1,11 +1,13 @@
-package cn.yusei.jvm.runtimespace;
+package cn.yusei.jvm.slot;
+
+import cn.yusei.jvm.ObjectRef;
 
 public class Slot {
 
 	private int value;
-	private Object ref;
+	private ObjectRef ref;
 
-	public Slot(int value, Object ref) {
+	public Slot(int value, ObjectRef ref) {
 		this.value = value;
 		this.ref = ref;
 	}
@@ -14,7 +16,7 @@ public class Slot {
 		return value;
 	}
 
-	public Object getRef() {
+	public ObjectRef getRef() {
 		return ref;
 	}
 

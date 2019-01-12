@@ -10,10 +10,11 @@ import org.junit.Test;
 
 import cn.yusei.jvm.instruction.BytecodeReader;
 import cn.yusei.jvm.instruction.Instruction;
-import cn.yusei.jvm.runtimespace.Frame;
-import cn.yusei.jvm.runtimespace.LocalVarsTable;
-import cn.yusei.jvm.runtimespace.OperandStack;
 import cn.yusei.jvm.runtimespace.ThreadSpace;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.runtimespace.stack.LocalVarsTable;
+import cn.yusei.jvm.runtimespace.stack.OperandStack;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class WideTest {
 
@@ -22,21 +23,23 @@ public class WideTest {
 	private static final int MAX_OPERAND_STACK_CAPACITY = 16;
 	private Frame frame;
 	private BytecodeReader reader;
-	private byte[] codes = new byte[] {0x15, 1, 0, 0x16, 1, 0, 0x17, 1, 0, 0x18, 1, 0, 0x36, 1, 0, 0x37, 1, 0, 0x38, 1, 0, 0x39, 1, 0,  -0x7c, 1, 0, 1, 0, -0x57, 0x19, 1, 0, 0x3a, 1, 0};
-	
+	private byte[] codes = new byte[] { 0x15, 1, 0, 0x16, 1, 0, 0x17, 1, 0, 0x18, 1, 0, 0x36, 1, 0, 0x37, 1, 0, 0x38, 1,
+			0, 0x39, 1, 0, -0x7c, 1, 0, 1, 0, -0x57, 0x19, 1, 0, 0x3a, 1, 0 };
+
 	@Before
 	public void setUp() {
 		wide = new WIDE();
-		frame = new Frame(new ThreadSpace(), MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(new ThreadSpace(),
+				MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 		reader = new BytecodeReader(codes);
 	}
-	
+
 	@Test
 	public void readOperandsAndExecute() throws IOException {
 		double delta = 0.01;
 		OperandStack stack = frame.getOperandStack();
 		LocalVarsTable table = frame.getLocalVarsTable();
-		
+
 		wide.readOperands(reader);
 		assertEquals(3, reader.getPc());
 		table.setInt(256, 10);
@@ -57,7 +60,7 @@ public class WideTest {
 		table.setDouble(256, 3.1415926);
 		wide.execute(frame);
 		assertEquals(3.1415926, stack.popDouble(), delta);
-		
+
 		wide.readOperands(reader);
 		assertEquals(15, reader.getPc());
 		stack.pushInt(100);
@@ -78,7 +81,7 @@ public class WideTest {
 		stack.pushDouble(100.9999999);
 		wide.execute(frame);
 		assertEquals(100.9999999, table.getDouble(256), delta);
-		
+
 		wide.readOperands(reader);
 		assertEquals(29, reader.getPc());
 		table.setInt(256, 10);
@@ -86,11 +89,10 @@ public class WideTest {
 		assertEquals(266, table.getInt(256));
 		try {
 			wide.readOperands(reader);
-		}
-		catch (UnsupportedOpCodeError e) {
+		} catch (UnsupportedOpCodeError e) {
 			return;
 		}
 		fail();
 	}
-	
+
 }

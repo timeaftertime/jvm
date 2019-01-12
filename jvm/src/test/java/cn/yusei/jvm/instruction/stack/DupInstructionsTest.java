@@ -12,8 +12,9 @@ import cn.yusei.jvm.instruction.stack.DupInstructions.DUP2_X1;
 import cn.yusei.jvm.instruction.stack.DupInstructions.DUP2_X2;
 import cn.yusei.jvm.instruction.stack.DupInstructions.DUP_X1;
 import cn.yusei.jvm.instruction.stack.DupInstructions.DUP_X2;
-import cn.yusei.jvm.runtimespace.Frame;
-import cn.yusei.jvm.runtimespace.OperandStack;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.runtimespace.stack.OperandStack;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class DupInstructionsTest {
 
@@ -31,12 +32,12 @@ public class DupInstructionsTest {
 		dups[3] = new DUP2();
 		dups[4] = new DUP2_X1();
 		dups[5] = new DUP2_X2();
-		frame = new Frame(null, MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(null, MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 	}
-	
+
 	@Test
 	public void readOperandsAndExecute() {
-		for(int i=0; i<6; i++)
+		for (int i = 0; i < 6; i++)
 			dups[i].readOperands(null);
 		OperandStack stack = frame.getOperandStack();
 		pushInt(1);
@@ -83,9 +84,9 @@ public class DupInstructionsTest {
 		assertEquals(3, stack.popInt());
 		assertEquals(0, stack.size());
 	}
-	
+
 	private void pushInt(int n) {
-		for(int i=1; i<=n; i++)
+		for (int i = 1; i <= n; i++)
 			frame.getOperandStack().pushInt(i);
 	}
 

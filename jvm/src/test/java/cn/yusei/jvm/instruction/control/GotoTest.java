@@ -9,8 +9,9 @@ import org.junit.Test;
 
 import cn.yusei.jvm.instruction.BytecodeReader;
 import cn.yusei.jvm.instruction.base.Int16BranchInstruction;
-import cn.yusei.jvm.runtimespace.Frame;
 import cn.yusei.jvm.runtimespace.ThreadSpace;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class GotoTest {
 
@@ -24,7 +25,8 @@ public class GotoTest {
 	@Before
 	public void setUp() {
 		_goto = new GOTO();
-		frame = new Frame(new ThreadSpace(), MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(new ThreadSpace(),
+				MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 		reader = new BytecodeReader(codes);
 	}
 	

@@ -12,7 +12,8 @@ import cn.yusei.jvm.instruction.math.RemInstructions.DREM;
 import cn.yusei.jvm.instruction.math.RemInstructions.FREM;
 import cn.yusei.jvm.instruction.math.RemInstructions.IREM;
 import cn.yusei.jvm.instruction.math.RemInstructions.LREM;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class RemInstructionsTest {
 
@@ -28,7 +29,7 @@ public class RemInstructionsTest {
 		rems[1] = new LREM();
 		rems[2] = new FREM();
 		rems[3] = new DREM();
-		frame = new Frame(null, MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(null, MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 	}
 
 	@Test

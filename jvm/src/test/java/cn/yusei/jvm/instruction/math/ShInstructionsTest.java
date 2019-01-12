@@ -12,7 +12,8 @@ import cn.yusei.jvm.instruction.math.ShInstructions.IUSHR;
 import cn.yusei.jvm.instruction.math.ShInstructions.LSHL;
 import cn.yusei.jvm.instruction.math.ShInstructions.LSHR;
 import cn.yusei.jvm.instruction.math.ShInstructions.LUSHR;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class ShInstructionsTest {
 
@@ -30,7 +31,7 @@ public class ShInstructionsTest {
 		shs[3] = new LSHL();
 		shs[4] = new LSHR();
 		shs[5] = new LUSHR();
-		frame = new Frame(null, MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(null, MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 	}
 
 	@Test
@@ -62,7 +63,7 @@ public class ShInstructionsTest {
 		shs[5].execute(frame);
 		assertEquals(9223372025743664697L, frame.getOperandStack().popLong());
 	}
-	
+
 	@Test
 	public void shMoreThan32Or64() {
 		frame.getOperandStack().pushInt(1);

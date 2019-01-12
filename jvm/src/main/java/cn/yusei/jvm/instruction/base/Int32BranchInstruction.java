@@ -1,6 +1,6 @@
 package cn.yusei.jvm.instruction.base;
 
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
 
 public abstract class Int32BranchInstruction extends Int32Instruction {
 

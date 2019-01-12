@@ -1,9 +1,9 @@
 package cn.yusei.jvm.instruction.stack;
 
 import cn.yusei.jvm.instruction.base.NoOperandInstruction;
-import cn.yusei.jvm.runtimespace.Frame;
-import cn.yusei.jvm.runtimespace.OperandStack;
-import cn.yusei.jvm.runtimespace.Slot;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.runtimespace.stack.OperandStack;
+import cn.yusei.jvm.slot.Slot;
 
 public class SWAP extends NoOperandInstruction {
 

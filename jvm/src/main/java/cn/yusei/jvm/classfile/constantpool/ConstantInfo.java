@@ -7,6 +7,6 @@ public interface ConstantInfo {
 
 	int getTag();
 
-	void readInfo(DataInputStream data) throws IOException;
+	void readInfo(DataInputStream data, ConstantPool pool) throws IOException;
 	
 }

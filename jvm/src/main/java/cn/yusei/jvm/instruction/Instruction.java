@@ -2,7 +2,7 @@ package cn.yusei.jvm.instruction;
 
 import java.io.IOException;
 
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
 
 public interface Instruction {
 

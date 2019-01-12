@@ -10,15 +10,16 @@ import cn.yusei.jvm.instruction.math.SubInstructions.DSUB;
 import cn.yusei.jvm.instruction.math.SubInstructions.FSUB;
 import cn.yusei.jvm.instruction.math.SubInstructions.ISUB;
 import cn.yusei.jvm.instruction.math.SubInstructions.LSUB;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class SubInstructionsTest {
-	
+
 	private NoOperandInstruction[] subs;
 	private static final int MAX_LOCAL_VARS_TABLE_CAPACITY = 7;
 	private static final int MAX_OPERAND_STACK_CAPACITY = 16;
 	private Frame frame;
-	
+
 	@Before
 	public void setUp() {
 		subs = new NoOperandInstruction[4];
@@ -26,13 +27,13 @@ public class SubInstructionsTest {
 		subs[1] = new LSUB();
 		subs[2] = new FSUB();
 		subs[3] = new DSUB();
-		frame =  new Frame(null, MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(null, MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 	}
-	
+
 	@Test
 	public void readOperandsAndExecute() {
 		double delta = 0.01;
-		for(int i=0; i<4; i++)
+		for (int i = 0; i < 4; i++)
 			subs[i].readOperands(null);
 		frame.getOperandStack().pushInt(2);
 		frame.getOperandStack().pushInt(1);

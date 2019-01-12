@@ -8,7 +8,8 @@ import org.junit.Test;
 import cn.yusei.jvm.instruction.base.NoOperandInstruction;
 import cn.yusei.jvm.instruction.math.OrInstructions.IOR;
 import cn.yusei.jvm.instruction.math.OrInstructions.LOR;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class OrInstructionsTest {
 
@@ -22,7 +23,7 @@ public class OrInstructionsTest {
 		ors = new NoOperandInstruction[2];
 		ors[0] = new IOR();
 		ors[1] = new LOR();
-		frame = new Frame(null, MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(null, MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 	}
 
 	@Test
@@ -38,5 +39,5 @@ public class OrInstructionsTest {
 		ors[1].execute(frame);
 		assertEquals(-8L | 3L, frame.getOperandStack().popLong());
 	}
-	
+
 }

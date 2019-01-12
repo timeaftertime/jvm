@@ -2,20 +2,19 @@ package cn.yusei.jvm;
 
 import java.io.IOException;
 
-import cn.yusei.jvm.classfile.member.attribute.CodeAttribute;
 import cn.yusei.jvm.instruction.BytecodeReader;
 import cn.yusei.jvm.instruction.Instruction;
 import cn.yusei.jvm.instruction.InstructionFactory;
-import cn.yusei.jvm.runtimespace.Frame;
 import cn.yusei.jvm.runtimespace.ThreadSpace;
+import cn.yusei.jvm.runtimespace.stack.Frame;
 
 public class Interpreter {
 
-	public static void interpret(CodeAttribute code) throws IOException {
+	public static void interpret(Method method) throws IOException  {
 		ThreadSpace thread = new ThreadSpace();
-		thread.pushFrame(code.getMaxLocal(), code.getMaxStack());
+		thread.pushFrame(method);
 		Frame frame = thread.popFrame();
-		loop(frame, code.getCodes());
+		loop(frame, method.getCodes());
 	}
 	
 	private static void loop(Frame frame, byte[] codes) throws IOException {

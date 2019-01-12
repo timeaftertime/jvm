@@ -12,7 +12,8 @@ import cn.yusei.jvm.instruction.math.DivInstructions.DDIV;
 import cn.yusei.jvm.instruction.math.DivInstructions.FDIV;
 import cn.yusei.jvm.instruction.math.DivInstructions.IDIV;
 import cn.yusei.jvm.instruction.math.DivInstructions.LDIV;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
+import cn.yusei.jvm.testutil.MockFactory;
 
 public class DivInstructionsTest {
 
@@ -20,7 +21,7 @@ public class DivInstructionsTest {
 	private static final int MAX_LOCAL_VARS_TABLE_CAPACITY = 7;
 	private static final int MAX_OPERAND_STACK_CAPACITY = 16;
 	private Frame frame;
-	
+
 	@Before
 	public void setUp() {
 		divs = new NoOperandInstruction[4];
@@ -28,13 +29,13 @@ public class DivInstructionsTest {
 		divs[1] = new LDIV();
 		divs[2] = new FDIV();
 		divs[3] = new DDIV();
-		frame =  new Frame(null, MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY);
+		frame = new Frame(null, MockFactory.newMethod(MAX_LOCAL_VARS_TABLE_CAPACITY, MAX_OPERAND_STACK_CAPACITY));
 	}
-	
+
 	@Test
 	public void readOperandsAndExecute() {
 		double delta = 0.01;
-		for(int i=0; i<4; i++)
+		for (int i = 0; i < 4; i++)
 			divs[i].readOperands(null);
 		frame.getOperandStack().pushInt(2);
 		frame.getOperandStack().pushInt(1);
@@ -53,21 +54,19 @@ public class DivInstructionsTest {
 		divs[3].execute(frame);
 		assertEquals(2.11111111 / 1.1111111, frame.getOperandStack().popDouble(), delta);
 	}
-	
+
 	@Test
 	public void divZero() {
 		frame.getOperandStack().pushInt(1);
 		frame.getOperandStack().pushInt(0);
 		try {
 			divs[0].execute(frame);
-		}
-		catch (ArithmeticException e1) {
+		} catch (ArithmeticException e1) {
 			frame.getOperandStack().pushLong(1);
 			frame.getOperandStack().pushLong(0);
 			try {
 				divs[1].execute(frame);
-			}
-			catch (ArithmeticException e2) {
+			} catch (ArithmeticException e2) {
 				frame.getOperandStack().pushFloat(1);
 				frame.getOperandStack().pushFloat(0);
 				divs[2].execute(frame);
@@ -81,7 +80,7 @@ public class DivInstructionsTest {
 			fail();
 		}
 	}
-	
+
 	@Test
 	public void divZeroWithZero() {
 		frame.getOperandStack().pushFloat(0);
@@ -93,5 +92,5 @@ public class DivInstructionsTest {
 		divs[3].execute(frame);
 		assertTrue(Double.isNaN(frame.getOperandStack().popDouble()));
 	}
-	
+
 }

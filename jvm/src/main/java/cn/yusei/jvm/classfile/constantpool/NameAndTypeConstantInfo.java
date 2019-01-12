@@ -17,7 +17,7 @@ public class NameAndTypeConstantInfo implements ConstantInfo {
 	}
 
 	@Override
-	public void readInfo(DataInputStream data) throws IOException {
+	public void readInfo(DataInputStream data, ConstantPool pool) throws IOException {
 		nameIndex = data.readUnsignedShort();
 		descriptorIndex = data.readUnsignedShort();
 	}

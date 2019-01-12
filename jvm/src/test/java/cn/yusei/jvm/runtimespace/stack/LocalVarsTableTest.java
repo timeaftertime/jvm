@@ -1,9 +1,12 @@
-package cn.yusei.jvm.runtimespace;
+package cn.yusei.jvm.runtimespace.stack;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import cn.yusei.jvm.ObjectRef;
+import cn.yusei.jvm.runtimespace.stack.LocalVarsTable;
 
 public class LocalVarsTableTest {
 
@@ -22,7 +25,7 @@ public class LocalVarsTableTest {
 		long var2 = 111222333444555L;
 		float var3 = 11.22f;
 		double var4 = 333.444;
-		String var5 = "LocalVariableTable";
+		ObjectRef var5 = new ObjectRef();
 		table.setInt(index, var1);
 		index++;
 		table.setLong(index, var2);

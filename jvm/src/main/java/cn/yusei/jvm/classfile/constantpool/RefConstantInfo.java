@@ -9,7 +9,7 @@ public abstract class RefConstantInfo implements ConstantInfo {
 	protected int nameAndTypeIndex;
 	
 	@Override
-	public void readInfo(DataInputStream data) throws IOException {
+	public void readInfo(DataInputStream data, ConstantPool pool) throws IOException {
 		classIndex = data.readUnsignedShort();
 		nameAndTypeIndex = data.readUnsignedShort();
 	}

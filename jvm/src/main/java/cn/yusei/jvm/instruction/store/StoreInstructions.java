@@ -2,7 +2,7 @@ package cn.yusei.jvm.instruction.store;
 
 import cn.yusei.jvm.instruction.base.NoOperandInstruction;
 import cn.yusei.jvm.instruction.base.UInt8Instruction;
-import cn.yusei.jvm.runtimespace.Frame;
+import cn.yusei.jvm.runtimespace.stack.Frame;
 
 public class StoreInstructions {
 
