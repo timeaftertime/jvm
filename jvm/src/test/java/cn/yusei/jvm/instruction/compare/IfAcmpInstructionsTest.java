@@ -44,9 +44,9 @@ public class IfAcmpInstructionsTest {
 			assertEquals((i + 1) * 2, reader.getPc());
 		}
 		OperandStack stack = frame.getOperandStack();
-		stack.pushRef(new ObjectRef());
-		stack.pushRef(new ObjectRef());
-		ObjectRef ref = new ObjectRef();
+		stack.pushRef(ObjectRef.newObject(null, 0));
+		stack.pushRef(ObjectRef.newObject(null, 0));
+		ObjectRef ref = ObjectRef.newObject(null, 0);
 		stack.pushRef(ref);
 		stack.pushRef(ref);
 		assertEquals(0, frame.getThreadSpace().getPc());

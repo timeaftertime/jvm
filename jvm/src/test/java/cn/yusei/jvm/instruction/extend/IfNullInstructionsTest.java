@@ -44,7 +44,7 @@ public class IfNullInstructionsTest {
 			assertEquals((i + 1) * 2, reader.getPc());
 		}
 		OperandStack stack = frame.getOperandStack();
-		stack.pushRef(new ObjectRef());
+		stack.pushRef(ObjectRef.newObject(null, 0));
 		stack.pushRef(null);
 		assertEquals(0, frame.getThreadSpace().getPc());
 		ifXNulls[0].execute(frame);

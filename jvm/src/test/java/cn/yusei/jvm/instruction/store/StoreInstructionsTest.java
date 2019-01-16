@@ -197,7 +197,7 @@ public class StoreInstructionsTest {
 		}
 		ObjectRef[] refs = new ObjectRef[4];
 		for (int i = 0; i < 4; i++) {
-			refs[i] = new ObjectRef();
+			refs[i] = ObjectRef.newObject(null, 0);
 			frame.getOperandStack().pushRef(refs[i]);
 		}
 		for (int i = 0; i < 4; i++) {

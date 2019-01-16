@@ -1,4 +1,4 @@
-package cn.yusei.jvm;
+package cn.yusei.jvm.instruction;
 
 public class ExecuteBytecodeError extends Error {
 

@@ -47,10 +47,19 @@ import cn.yusei.jvm.instruction.constant.ConstInstructions.ICONST_5;
 import cn.yusei.jvm.instruction.constant.ConstInstructions.ICONST_M1;
 import cn.yusei.jvm.instruction.constant.ConstInstructions.LCONST_0;
 import cn.yusei.jvm.instruction.constant.ConstInstructions.LCONST_1;
+import cn.yusei.jvm.instruction.constant.LdcInstructions.LDC;
+import cn.yusei.jvm.instruction.constant.LdcInstructions.LDC2_W;
+import cn.yusei.jvm.instruction.constant.LdcInstructions.LDC_W;
 import cn.yusei.jvm.instruction.constant.NOP;
 import cn.yusei.jvm.instruction.constant.PushInstructions.BIPUSH;
 import cn.yusei.jvm.instruction.constant.PushInstructions.SIPUSH;
 import cn.yusei.jvm.instruction.control.GOTO;
+import cn.yusei.jvm.instruction.control.ReturnInstructions.ARETURN;
+import cn.yusei.jvm.instruction.control.ReturnInstructions.DRETURN;
+import cn.yusei.jvm.instruction.control.ReturnInstructions.FRETURN;
+import cn.yusei.jvm.instruction.control.ReturnInstructions.IRETURN;
+import cn.yusei.jvm.instruction.control.ReturnInstructions.LRETURN;
+import cn.yusei.jvm.instruction.control.ReturnInstructions.RETURN;
 import cn.yusei.jvm.instruction.control.SwitchInstructions.LOOKUP_SWITCH;
 import cn.yusei.jvm.instruction.control.SwitchInstructions.TABLE_SWITCH;
 import cn.yusei.jvm.instruction.extend.GOTO_W;
@@ -58,6 +67,14 @@ import cn.yusei.jvm.instruction.extend.IfNullInstructions.IFNONNULL;
 import cn.yusei.jvm.instruction.extend.IfNullInstructions.IFNULL;
 import cn.yusei.jvm.instruction.extend.UnsupportedOpCodeError;
 import cn.yusei.jvm.instruction.extend.WIDE;
+import cn.yusei.jvm.instruction.load.ALoadInstructions.AALOAD;
+import cn.yusei.jvm.instruction.load.ALoadInstructions.BALOAD;
+import cn.yusei.jvm.instruction.load.ALoadInstructions.CALOAD;
+import cn.yusei.jvm.instruction.load.ALoadInstructions.DALOAD;
+import cn.yusei.jvm.instruction.load.ALoadInstructions.FALOAD;
+import cn.yusei.jvm.instruction.load.ALoadInstructions.IALOAD;
+import cn.yusei.jvm.instruction.load.ALoadInstructions.LALOAD;
+import cn.yusei.jvm.instruction.load.ALoadInstructions.SALOAD;
 import cn.yusei.jvm.instruction.load.LoadInstructions.ALOAD;
 import cn.yusei.jvm.instruction.load.LoadInstructions.ALOAD_0;
 import cn.yusei.jvm.instruction.load.LoadInstructions.ALOAD_1;
@@ -116,16 +133,21 @@ import cn.yusei.jvm.instruction.math.SubInstructions.ISUB;
 import cn.yusei.jvm.instruction.math.SubInstructions.LSUB;
 import cn.yusei.jvm.instruction.math.XorInstructions.IXOR;
 import cn.yusei.jvm.instruction.math.XorInstructions.LXOR;
+import cn.yusei.jvm.instruction.reference.ANEW_ARRAY;
+import cn.yusei.jvm.instruction.reference.ARRAY_LENGTH;
 import cn.yusei.jvm.instruction.reference.CHECK_CAST;
 import cn.yusei.jvm.instruction.reference.GET_FIELD;
 import cn.yusei.jvm.instruction.reference.GET_STATIC;
 import cn.yusei.jvm.instruction.reference.INSTANCE_OF;
-import cn.yusei.jvm.instruction.reference.LdcInstructions.LDC;
-import cn.yusei.jvm.instruction.reference.LdcInstructions.LDC2_W;
-import cn.yusei.jvm.instruction.reference.LdcInstructions.LDC_W;
+import cn.yusei.jvm.instruction.reference.InvokeInstructions.INVOKE_INTERFACE;
+import cn.yusei.jvm.instruction.reference.InvokeInstructions.INVOKE_SPECIAL;
+import cn.yusei.jvm.instruction.reference.InvokeInstructions.INVOKE_STATIC;
+import cn.yusei.jvm.instruction.reference.InvokeInstructions.INVOKE_VIRTUAL;
 import cn.yusei.jvm.instruction.reference.NEW;
+import cn.yusei.jvm.instruction.reference.NEW_ARRAY;
 import cn.yusei.jvm.instruction.reference.PUT_FIELD;
 import cn.yusei.jvm.instruction.reference.PUT_STATIC;
+import cn.yusei.jvm.instruction.reserved.INVOKE_NATIVE;
 import cn.yusei.jvm.instruction.stack.DupInstructions.DUP;
 import cn.yusei.jvm.instruction.stack.DupInstructions.DUP2;
 import cn.yusei.jvm.instruction.stack.DupInstructions.DUP2_X1;
@@ -135,6 +157,14 @@ import cn.yusei.jvm.instruction.stack.DupInstructions.DUP_X2;
 import cn.yusei.jvm.instruction.stack.PopInstructions.POP;
 import cn.yusei.jvm.instruction.stack.PopInstructions.POP2;
 import cn.yusei.jvm.instruction.stack.SWAP;
+import cn.yusei.jvm.instruction.store.AStoreInstructions.AASTORE;
+import cn.yusei.jvm.instruction.store.AStoreInstructions.BASTORE;
+import cn.yusei.jvm.instruction.store.AStoreInstructions.CASTORE;
+import cn.yusei.jvm.instruction.store.AStoreInstructions.DASTORE;
+import cn.yusei.jvm.instruction.store.AStoreInstructions.FASTORE;
+import cn.yusei.jvm.instruction.store.AStoreInstructions.IASTORE;
+import cn.yusei.jvm.instruction.store.AStoreInstructions.LASTORE;
+import cn.yusei.jvm.instruction.store.AStoreInstructions.SASTORE;
 import cn.yusei.jvm.instruction.store.StoreInstructions.ASTORE;
 import cn.yusei.jvm.instruction.store.StoreInstructions.ASTORE_0;
 import cn.yusei.jvm.instruction.store.StoreInstructions.ASTORE_1;
@@ -203,14 +233,14 @@ public final class InstructionFactory {
 		static NoOperandInstruction aload_1 = new ALOAD_1();
 		static NoOperandInstruction aload_2 = new ALOAD_2();
 		static NoOperandInstruction aload_3 = new ALOAD_3();
-		// static NoOperandsInstruction iaload = new IALOAD();
-		// static NoOperandsInstruction laload = new LALOAD();
-		// static NoOperandsInstruction faload = new FALOAD();
-		// static NoOperandsInstruction daload = new DALOAD();
-		// static NoOperandsInstruction aaload = new AALOAD();
-		// static NoOperandsInstruction baload = new BALOAD();
-		// static NoOperandsInstruction caload = new CALOAD();
-		// static NoOperandsInstruction saload = new SALOAD();
+		static NoOperandInstruction iaload = new IALOAD();
+		static NoOperandInstruction laload = new LALOAD();
+		static NoOperandInstruction faload = new FALOAD();
+		static NoOperandInstruction daload = new DALOAD();
+		static NoOperandInstruction aaload = new AALOAD();
+		static NoOperandInstruction baload = new BALOAD();
+		static NoOperandInstruction caload = new CALOAD();
+		static NoOperandInstruction saload = new SALOAD();
 		static NoOperandInstruction istore_0 = new ISTORE_0();
 		static NoOperandInstruction istore_1 = new ISTORE_1();
 		static NoOperandInstruction istore_2 = new ISTORE_2();
@@ -231,14 +261,14 @@ public final class InstructionFactory {
 		static NoOperandInstruction astore_1 = new ASTORE_1();
 		static NoOperandInstruction astore_2 = new ASTORE_2();
 		static NoOperandInstruction astore_3 = new ASTORE_3();
-		// static NoOperandsInstruction iastore = new IASTORE();
-		// static NoOperandsInstruction lastore = new LASTORE();
-		// static NoOperandsInstruction fastore = new FASTORE();
-		// static NoOperandsInstruction dastore = new DASTORE();
-		// static NoOperandsInstruction aastore = new AASTORE();
-		// static NoOperandsInstruction bastore = new BASTORE();
-		// static NoOperandsInstruction castore = new CASTORE();
-		// static NoOperandsInstruction sastore = new SASTORE();
+		static NoOperandInstruction iastore = new IASTORE();
+		static NoOperandInstruction lastore = new LASTORE();
+		static NoOperandInstruction fastore = new FASTORE();
+		static NoOperandInstruction dastore = new DASTORE();
+		static NoOperandInstruction aastore = new AASTORE();
+		static NoOperandInstruction bastore = new BASTORE();
+		static NoOperandInstruction castore = new CASTORE();
+		static NoOperandInstruction sastore = new SASTORE();
 		static NoOperandInstruction pop = new POP();
 		static NoOperandInstruction pop2 = new POP2();
 		static NoOperandInstruction dup = new DUP();
@@ -304,17 +334,17 @@ public final class InstructionFactory {
 		static NoOperandInstruction fcmpg = new FCMPG();
 		static NoOperandInstruction dcmpl = new DCMPL();
 		static NoOperandInstruction dcmpg = new DCMPG();
-		// static NoOperandsInstruction ireturn = new IRETURN();
-		// static NoOperandsInstruction lreturn = new LRETURN();
-		// static NoOperandsInstruction freturn = new FRETURN();
-		// static NoOperandsInstruction dreturn = new DRETURN();
-		// static NoOperandsInstruction areturn = new ARETURN();
-		// static NoOperandsInstruction _return = new RETURN();
-		// static NoOperandsInstruction arraylength = new ARRAY_LENGTH();
-		// static NoOperandsInstruction athrow = new ATHROW();
-		// static NoOperandsInstruction monitorenter = new MONITOR_ENTER();
-		// static NoOperandsInstruction monitorexit = new MONITOR_EXIT();
-		// static NoOperandsInstruction invoke_native = new INVOKE_NATIVE();
+		static NoOperandInstruction ireturn = new IRETURN();
+		static NoOperandInstruction lreturn = new LRETURN();
+		static NoOperandInstruction freturn = new FRETURN();
+		static NoOperandInstruction dreturn = new DRETURN();
+		static NoOperandInstruction areturn = new ARETURN();
+		static NoOperandInstruction _return = new RETURN();
+		static NoOperandInstruction arraylength = new ARRAY_LENGTH();
+		// static NoOperandInstruction athrow = new ATHROW();
+		// static NoOperandInstruction monitorenter = new MONITOR_ENTER();
+		// static NoOperandInstruction monitorexit = new MONITOR_EXIT();
+		static NoOperandInstruction invoke_native = new INVOKE_NATIVE();
 	}
 
 	public static Instruction createInstruction(int opCode) {
@@ -355,12 +385,12 @@ public final class InstructionFactory {
 			return new BIPUSH();
 		case 0x11:
 			return new SIPUSH();
-		 case 0x12:
-		 return new LDC();
-		 case 0x13:
-		 return new LDC_W();
-		 case 0x14:
-		 return new LDC2_W();
+		case 0x12:
+			return new LDC();
+		case 0x13:
+			return new LDC_W();
+		case 0x14:
+			return new LDC2_W();
 		case 0x15:
 			return new ILOAD();
 		case 0x16:
@@ -411,22 +441,22 @@ public final class InstructionFactory {
 			return NoOperandInstructionsHolder.aload_2;
 		case 0x2d:
 			return NoOperandInstructionsHolder.aload_3;
-		// case 0x2e:
-		// return NoOperandInstructionsHolder.iaload;
-		// case 0x2f:
-		// return NoOperandInstructionsHolder.laload;
-		// case 0x30:
-		// return NoOperandInstructionsHolder.faload;
-		// case 0x31:
-		// return NoOperandInstructionsHolder.daload;
-		// case 0x32:
-		// return NoOperandInstructionsHolder.aaload;
-		// case 0x33:
-		// return NoOperandInstructionsHolder.baload;
-		// case 0x34:
-		// return NoOperandInstructionsHolder.caload;
-		// case 0x35:
-		// return NoOperandInstructionsHolder.saload;
+		case 0x2e:
+			return NoOperandInstructionsHolder.iaload;
+		case 0x2f:
+			return NoOperandInstructionsHolder.laload;
+		case 0x30:
+			return NoOperandInstructionsHolder.faload;
+		case 0x31:
+			return NoOperandInstructionsHolder.daload;
+		case 0x32:
+			return NoOperandInstructionsHolder.aaload;
+		case 0x33:
+			return NoOperandInstructionsHolder.baload;
+		case 0x34:
+			return NoOperandInstructionsHolder.caload;
+		case 0x35:
+			return NoOperandInstructionsHolder.saload;
 		case 0x36:
 			return new ISTORE();
 		case 0x37:
@@ -477,22 +507,22 @@ public final class InstructionFactory {
 			return NoOperandInstructionsHolder.astore_2;
 		case 0x4e:
 			return NoOperandInstructionsHolder.astore_3;
-		// case 0x4f:
-		// return NoOperandInstructionsHolder.iastore;
-		// case 0x50:
-		// return NoOperandInstructionsHolder.lastore;
-		// case 0x51:
-		// return NoOperandInstructionsHolder.fastore;
-		// case 0x52:
-		// return NoOperandInstructionsHolder.dastore;
-		// case 0x53:
-		// return NoOperandInstructionsHolder.aastore;
-		// case 0x54:
-		// return NoOperandInstructionsHolder.bastore;
-		// case 0x55:
-		// return NoOperandInstructionsHolder.castore;
-		// case 0x56:
-		// return NoOperandInstructionsHolder.sastore;
+		case 0x4f:
+			return NoOperandInstructionsHolder.iastore;
+		case 0x50:
+			return NoOperandInstructionsHolder.lastore;
+		case 0x51:
+			return NoOperandInstructionsHolder.fastore;
+		case 0x52:
+			return NoOperandInstructionsHolder.dastore;
+		case 0x53:
+			return NoOperandInstructionsHolder.aastore;
+		case 0x54:
+			return NoOperandInstructionsHolder.bastore;
+		case 0x55:
+			return NoOperandInstructionsHolder.castore;
+		case 0x56:
+			return NoOperandInstructionsHolder.sastore;
 		case 0x57:
 			return NoOperandInstructionsHolder.pop;
 		case 0x58:
@@ -615,8 +645,8 @@ public final class InstructionFactory {
 		// return NoOperandInstructionsHolder.i2c;
 		// case 0x93:
 		// return NoOperandInstructionsHolder.i2s;
-		 case 0x94:
-		 return NoOperandInstructionsHolder.lcmp;
+		case 0x94:
+			return NoOperandInstructionsHolder.lcmp;
 		case 0x95:
 			return NoOperandInstructionsHolder.fcmpl;
 		case 0x96:
@@ -663,50 +693,50 @@ public final class InstructionFactory {
 			return new TABLE_SWITCH();
 		case 0xab:
 			return new LOOKUP_SWITCH();
-		// case 0xac:
-		// return NoOperandInstructionsHolder.ireturn;
-		// case 0xad:
-		// return NoOperandInstructionsHolder.lreturn;
-		// case 0xae:
-		// return NoOperandInstructionsHolder.freturn;
-		// case 0xaf:
-		// return NoOperandInstructionsHolder.dreturn;
-		// case 0xb0:
-		// return NoOperandInstructionsHolder.areturn;
-		// case 0xb1:
-		// return NoOperandInstructionsHolder._return;
-		 case 0xb2:
-		 return new GET_STATIC();
-		 case 0xb3:
-		 return new PUT_STATIC();
-		 case 0xb4:
-		 return new GET_FIELD();
-		 case 0xb5:
-		 return new PUT_FIELD();
-		// case 0xb6:
-		// return new INVOKE_VIRTUAL();
-		// case 0xb7:
-		// return new INVOKE_SPECIAL();
-		// case 0xb8:
-		// return new INVOKE_STATIC();
-		// case 0xb9:
-		// return new INVOKE_INTERFACE();
+		case 0xac:
+			return NoOperandInstructionsHolder.ireturn;
+		case 0xad:
+			return NoOperandInstructionsHolder.lreturn;
+		case 0xae:
+			return NoOperandInstructionsHolder.freturn;
+		case 0xaf:
+			return NoOperandInstructionsHolder.dreturn;
+		case 0xb0:
+			return NoOperandInstructionsHolder.areturn;
+		case 0xb1:
+			return NoOperandInstructionsHolder._return;
+		case 0xb2:
+			return new GET_STATIC();
+		case 0xb3:
+			return new PUT_STATIC();
+		case 0xb4:
+			return new GET_FIELD();
+		case 0xb5:
+			return new PUT_FIELD();
+		case 0xb6:
+			return new INVOKE_VIRTUAL();
+		case 0xb7:
+			return new INVOKE_SPECIAL();
+		case 0xb8:
+			return new INVOKE_STATIC();
+		case 0xb9:
+			return new INVOKE_INTERFACE();
 		// case 0xba:
 		// return new INVOKE_DYNAMIC();
-		 case 0xbb:
-		 return new NEW();
-		// case 0xbc:
-		// return new NEW_ARRAY();
-		// case 0xbd:
-		// return new ANEW_ARRAY();
-		// case 0xbe:
-		// return NoOperandInstructionsHolder.arraylength;
+		case 0xbb:
+			return new NEW();
+		case 0xbc:
+			return new NEW_ARRAY();
+		case 0xbd:
+			return new ANEW_ARRAY();
+		case 0xbe:
+			return NoOperandInstructionsHolder.arraylength;
 		// case 0xbf:
 		// return NoOperandInstructionsHolder.athrow;
-		 case 0xc0:
-		 return new CHECK_CAST();
-		 case 0xc1:
-		 return new INSTANCE_OF();
+		case 0xc0:
+			return new CHECK_CAST();
+		case 0xc1:
+			return new INSTANCE_OF();
 		// case 0xc2:
 		// return NoOperandInstructionsHolder.monitorenter;
 		// case 0xc3:
@@ -724,8 +754,8 @@ public final class InstructionFactory {
 		// case 0xc9:
 		// return new JSR_W();
 		// case 0xca: todo breakpoint;
-		// case 0xfe:
-		// return NoOperandInstructionsHolder.invoke_native; // impdep1
+		case 0xfe:
+			return NoOperandInstructionsHolder.invoke_native; // impdep1
 		// case 0xff:
 		// return new BOOTSTRAP(); // impdep2
 		default:

@@ -22,4 +22,10 @@ public class JVMStack extends Stack<Frame> {
 		return super.push(item);
 	}
 
+	@Override
+	public String toString() {
+		return "JVMStack [maxSize=" + maxSize + ", Frames=" + super.toString() + "]";
+	}
+
+	
 }

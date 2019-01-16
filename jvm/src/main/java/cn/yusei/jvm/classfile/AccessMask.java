@@ -2,24 +2,24 @@ package cn.yusei.jvm.classfile;
 
 public class AccessMask {
 
-	private static final int ACC_PUBLIC = 0x0001;
-	private static final int ACC_PRIVATE = 0x0002;
-	private static final int ACC_PROTECTED = 0x0004;
-	private static final int ACC_STATIC = 0x0008;
-	private static final int ACC_FINAL = 0x0010;
-	private static final int ACC_SUPER = 0x0020;
-	private static final int ACC_SYNCHRONIZED = 0x0020;
-	private static final int ACC_VOLATILE = 0x0040;
-	private static final int ACC_BRIDGE = 0x0040;
-	private static final int ACC_VARARGS = 0x0080;
-	private static final int ACC_TRANSIENT = 0x0080;
-	private static final int ACC_NATIVE = 0x0100;
-	private static final int ACC_INTERFACE = 0x0200;
-	private static final int ACC_ABSTRACT = 0x0400;
-	private static final int ACC_STRICTFP = 0x0800;
-	private static final int ACC_SYNTHETIC = 0x1000;
-	private static final int ACC_ANNOTATION = 0x2000;
-	private static final int ACC_ENUM = 0x4000;
+	public static final int ACC_PUBLIC = 0x0001;
+	public static final int ACC_PRIVATE = 0x0002;
+	public static final int ACC_PROTECTED = 0x0004;
+	public static final int ACC_STATIC = 0x0008;
+	public static final int ACC_FINAL = 0x0010;
+	public static final int ACC_SUPER = 0x0020;
+	public static final int ACC_SYNCHRONIZED = 0x0020;
+	public static final int ACC_VOLATILE = 0x0040;
+	public static final int ACC_BRIDGE = 0x0040;
+	public static final int ACC_VARARGS = 0x0080;
+	public static final int ACC_TRANSIENT = 0x0080;
+	public static final int ACC_NATIVE = 0x0100;
+	public static final int ACC_INTERFACE = 0x0200;
+	public static final int ACC_ABSTRACT = 0x0400;
+	public static final int ACC_STRICTFP = 0x0800;
+	public static final int ACC_SYNTHETIC = 0x1000;
+	public static final int ACC_ANNOTATION = 0x2000;
+	public static final int ACC_ENUM = 0x4000;
 
 	private int mask;
 
@@ -47,6 +47,13 @@ public class AccessMask {
 		return (mask & ACC_FINAL) == ACC_FINAL;
 	}
 
+	/**
+	 * 是否设置了 ACC_SUPER。用于表示是否允许 invokespecial 字节码指令的新语义 在 JDK 1.0.2 之前使用
+	 * invokenonvirtual 来调用父类方法，该指令不会进行虚函数查找而是采用静态绑定。invokespecial 则会 进行虚函数查找。 JDK
+	 * 1.0.2 之后编译的类的这个标志都必须为真。
+	 * 
+	 * @return
+	 */
 	public boolean isSuper() {
 		return (mask & ACC_SUPER) == ACC_SUPER;
 	}
@@ -61,6 +68,7 @@ public class AccessMask {
 
 	/**
 	 * 是否为编译器产生的桥接方法
+	 * 
 	 * @return
 	 */
 	public boolean isBridge() {
@@ -69,6 +77,7 @@ public class AccessMask {
 
 	/**
 	 * 是否接受不定参数
+	 * 
 	 * @return
 	 */
 	public boolean isVarargs() {
@@ -93,12 +102,13 @@ public class AccessMask {
 
 	/**
 	 * 是否为 strictfp
+	 * 
 	 * @return
 	 */
 	public boolean isStrictfp() {
 		return (mask & ACC_STRICTFP) == ACC_STRICTFP;
 	}
-	
+
 	public boolean isSynthetic() {
 		return (mask & ACC_SYNTHETIC) == ACC_SYNTHETIC;
 	}

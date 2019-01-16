@@ -7,7 +7,7 @@ import cn.yusei.jvm.instruction.BytecodeReader;
 public abstract class Int8Instrcution extends OneOperandInstruction {
 
 	@Override
-	public final int readOperand(BytecodeReader reader) throws IOException {
+	protected final int readOperand(BytecodeReader reader) throws IOException {
 		return reader.readInt8();
 	}
 

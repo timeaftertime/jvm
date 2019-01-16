@@ -23,7 +23,7 @@ public class AttributeFactory {
 			return new SourceFileAttribute(attrNameIndex, attrLen);
 		case "Synthetic":
 			return new SyntheticAttribute(attrNameIndex, attrLen);
-		//TODO Java 1.8 一共有 23 种属性，这里只解析以上 8 种
+		// TODO Java 1.8 一共有 23 种属性，这里只解析以上 8 种
 		default:
 			return new UnparsedAttribute(attrNameIndex, attrLen);
 		}

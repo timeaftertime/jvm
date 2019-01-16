@@ -51,18 +51,23 @@ public class Member {
 	public boolean isSynthetic() {
 		return access.isSynthetic();
 	}
-	
+
 	public boolean isAccessiableFrom(ClassInfo from) throws ClassNotFoundException, IOException {
-		if(isPublic())
+		if (isPublic())
 			return true;
-		if(isProtected()) {
-			return owner.equals(from) || from.isSubClassOf(owner) || from.getPackageName().equals(owner.getPackageName());
+		if (isProtected()) {
+			return owner == from || from.isSubClassOf(owner) || from.getPackageName().equals(owner.getPackageName());
 		}
-		if(!isPrivate())
+		if (!isPrivate())
 			return from.getPackageName().equals(owner.getPackageName());
-		return false;
+		return owner == from;
 	}
-	
+
+	/**
+	 * 获取该成员属于哪个类
+	 * 
+	 * @return
+	 */
 	public ClassInfo getClassInfo() {
 		return owner;
 	}

@@ -68,4 +68,8 @@ public class BytecodeReader {
 		return int32s;
 	}
 
+	public void reset(byte[] codes, int pc) {
+		this.codes = codes;
+		this.pc = pc;
+	}
 }

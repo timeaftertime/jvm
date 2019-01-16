@@ -37,15 +37,27 @@ public class ClassInfoLoader {
 	public ClassInfo loadClass(String className) throws ClassNotFoundException, IOException {
 		if (loadedClassInfo.containsKey(className))
 			return loadedClassInfo.get(className);
-		return load(className);
+		ClassInfo loaded = load(className);
+		loadedClassInfo.put(loaded.getName(), loaded);
+		return loaded;
 	}
 
 	private ClassInfo load(String className) throws ClassNotFoundException, IOException {
+		if(className.startsWith("["))
+			return loadArrayClass(toSlashSplitClassName(className));
 		// 加载
 		byte[] classByte = readClass(className);
 		ClassInfo classInfo = defineClass(classByte);
 		link(classInfo);
 		return classInfo;
+	}
+
+	private String toSlashSplitClassName(String className) {
+		return className.replace(".", "/");
+	}
+	
+	private ClassInfo loadArrayClass(String className) {
+		return ClassInfo.newArrayClassInfo(this, className);
 	}
 
 	private byte[] readClass(String className) throws ClassNotFoundException, IOException {
@@ -56,7 +68,6 @@ public class ClassInfoLoader {
 		ClassInfo classInfo = parseClass(classByte);
 		resolveSuperClass(classInfo);
 		resolveInterfaces(classInfo);
-		loadedClassInfo.put(classInfo.getName(), classInfo);
 		return classInfo;
 	}
 
@@ -140,12 +151,13 @@ public class ClassInfoLoader {
 			staticVars.setDouble(field.getSlotId(), pool.getDouble(field.getConstantValueIndex()));
 			break;
 		case "Ljava/lang/String;":
-			throw new RuntimeException("暂未实现");
+			staticVars.setRef(field.getSlotId(), StringPool.getString(this, pool.getString(field.getConstantValueIndex())));
+			break;
 		}
 	}
 
 	private void resolveSuperClass(ClassInfo classInfo) throws ClassNotFoundException, IOException {
-		if (classInfo.getSuperClassInfo() != null && !classInfo.getSuperName().equals("java.lang.Object"))
+		if (classInfo.getSuperName() != null)
 			classInfo.setSuperClassInfo(loadClass(classInfo.getSuperName()));
 	}
 

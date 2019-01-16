@@ -7,6 +7,8 @@ public class CommandLine {
 
 	private boolean versionCmd = false;
 	private boolean helpCmd = false;
+	
+	private String startClassName;
 
 	private String[] classPath;
 	
@@ -49,6 +51,14 @@ public class CommandLine {
 
 	public  List<String> getErrorMessages() {
 		return new ArrayList<String>(errorMessages);
+	}
+
+	public String getStartClassName() {
+		return startClassName;
+	}
+
+	public void setStartClassName(String startClassName) {
+		this.startClassName = startClassName;
 	}
 	
 }

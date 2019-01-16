@@ -12,13 +12,14 @@ import cn.yusei.jvm.ClassInfoLoader;
 import cn.yusei.jvm.ObjectRef;
 import cn.yusei.jvm.instruction.BytecodeReader;
 import cn.yusei.jvm.instruction.base.UInt16Instruction;
+import cn.yusei.jvm.runtimespace.ThreadSpace;
 import cn.yusei.jvm.runtimespace.stack.Frame;
 
 public class NewTest {
 
 	private UInt16Instruction _new;
 	private BytecodeReader reader;
-	private byte[] codes = {0, 2};
+	private byte[] codes = { 0, 2 };
 	private Frame frame;
 
 	@Before
@@ -26,7 +27,8 @@ public class NewTest {
 		_new = new NEW();
 		reader = new BytecodeReader(codes);
 		ClassInfo info = new ClassInfoLoader().loadClass("cn.yusei.Add");
-		frame = new Frame(null, info.getMethods()[0]);
+		info.startInit();
+		frame = new Frame(new ThreadSpace(), info.getMethods()[0]);
 	}
 
 	@Test

@@ -15,13 +15,13 @@ import cn.yusei.jvm.runtimespace.method.RTConstantPool;
 
 public class FieldRefTest {
 
-private RTConstantPool pool; 
-	
+	private RTConstantPool pool;
+
 	@Before
 	public void setUp() throws ClassNotFoundException, IOException {
 		pool = new ClassInfoLoader().loadClass("cn.yusei.ClassTest").getConstantPool();
 	}
-	
+
 	@Test
 	public void resolvedField() throws ClassNotFoundException, IOException {
 		FieldRef fieldRef = pool.getFieldRef(2);

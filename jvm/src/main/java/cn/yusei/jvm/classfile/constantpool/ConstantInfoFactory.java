@@ -28,6 +28,7 @@ public class ConstantInfoFactory {
 			return new InterfaceMethodrefConstantInfo();
 		case ConstantTag.NAME_AND_TYPE:
 			return new NameAndTypeConstantInfo();
+		// 以下三个为 Java7 为支持 invoke_dynamic 而加入的，目前只是读取数据，暂时没有用到
 		case ConstantTag.METHOD_HANDLE:
 			return new MethodHandleConstantInfo();
 		case ConstantTag.METHOD_TYPE:

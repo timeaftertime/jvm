@@ -16,4 +16,9 @@ public class ClassRef extends SymRef {
 	public String getClassName() {
 		return className;
 	}
+	
+	@Override
+	public String toString() {
+		return getClassName();
+	}
 }

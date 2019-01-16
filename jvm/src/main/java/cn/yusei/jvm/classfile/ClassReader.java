@@ -1,5 +1,6 @@
 package cn.yusei.jvm.classfile;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -50,10 +51,12 @@ public class ClassReader {
 	private byte[] readFromJarFile(String path, String className) {
 		InputStream ins = null;
 		try {
-			URL url = new URL("jar:file:" + path.replace(File.separator, "/") + "!/" + className.replace(File.separator, "/"));
+			URL url = new URL(
+					"jar:file:" + path.replace(File.separator, "/") + "!/" + className.replace(File.separator, "/"));
 			ins = url.openConnection().getInputStream();
+			ins = new BufferedInputStream(ins);
 			byte[] data = new byte[ins.available()];
-			ins.read(data);
+			ins.read(data, 0, ins.available());
 			return data;
 		} catch (IOException e) {
 		} finally {
@@ -68,7 +71,7 @@ public class ClassReader {
 	}
 
 	private byte[] readNormally(String path, String classFileName) {
-		File file = new File(path + File.separator +classFileName);
+		File file = new File(path + File.separator + classFileName);
 		if (!file.exists())
 			return null;
 		try (FileInputStream ins = new FileInputStream(file)) {

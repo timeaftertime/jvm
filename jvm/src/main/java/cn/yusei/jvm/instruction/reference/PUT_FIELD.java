@@ -3,9 +3,9 @@ package cn.yusei.jvm.instruction.reference;
 import java.io.IOException;
 
 import cn.yusei.jvm.ClassInfo;
-import cn.yusei.jvm.ExecuteBytecodeError;
 import cn.yusei.jvm.Field;
 import cn.yusei.jvm.ObjectRef;
+import cn.yusei.jvm.instruction.ExecuteBytecodeError;
 import cn.yusei.jvm.instruction.base.UInt16Instruction;
 import cn.yusei.jvm.runtimespace.method.RTConstantPool;
 import cn.yusei.jvm.runtimespace.stack.Frame;
@@ -65,7 +65,8 @@ public class PUT_FIELD extends UInt16Instruction {
 			ref.getMembers().setDouble(field.getSlotId(), val);
 			break;
 		}
-		case 'L': {
+		case 'L':
+		case '[': {
 			ObjectRef val = frame.getOperandStack().popRef();
 			ObjectRef ref = frame.getOperandStack().popRef();
 			if (ref == null)
@@ -73,6 +74,8 @@ public class PUT_FIELD extends UInt16Instruction {
 			ref.getMembers().setRef(field.getSlotId(), val);
 			break;
 		}
+		default:
+			throw new IllegalArgumentException("非法描述符：" + field.getDescriptor());
 		}
 	}
 

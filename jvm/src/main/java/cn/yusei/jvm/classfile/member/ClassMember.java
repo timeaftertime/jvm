@@ -15,24 +15,25 @@ public class ClassMember {
 	protected int nameIndex;
 	protected int descriptorIndex;
 	protected Attribute[] attributes;
-	
+
 	public ClassMember(DataInputStream data, ConstantPool constantPool) throws IOException {
 		accessMask = new AccessMask(data.readUnsignedShort());
 		nameIndex = data.readUnsignedShort();
 		descriptorIndex = data.readUnsignedShort();
 		attributes = ClassMemberUtil.readAttributes(data, constantPool);
 	}
-	
+
 	public CodeAttribute getCodeAttribute() {
-		for(Attribute attribute : attributes) {
-			if(attribute instanceof CodeAttribute)
+		for (Attribute attribute : attributes) {
+			if (attribute instanceof CodeAttribute)
 				return (CodeAttribute) attribute;
 		}
 		return null;
 	}
+
 	public ConstantValueAttribute getConstantValueAttribute() {
-		for(Attribute attribute : attributes) {
-			if(attribute instanceof ConstantValueAttribute)
+		for (Attribute attribute : attributes) {
+			if (attribute instanceof ConstantValueAttribute)
 				return (ConstantValueAttribute) attribute;
 		}
 		return null;
@@ -49,5 +50,10 @@ public class ClassMember {
 	public int getDescriptorIndex() {
 		return descriptorIndex;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "ClassMember [nameIndex=" + nameIndex + ", descriptorIndex=" + descriptorIndex + "]";
+	}
+
 }

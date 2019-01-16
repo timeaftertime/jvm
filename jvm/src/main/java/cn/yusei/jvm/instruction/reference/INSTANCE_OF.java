@@ -2,8 +2,8 @@ package cn.yusei.jvm.instruction.reference;
 
 import java.io.IOException;
 
-import cn.yusei.jvm.ExecuteBytecodeError;
 import cn.yusei.jvm.ObjectRef;
+import cn.yusei.jvm.instruction.ExecuteBytecodeError;
 import cn.yusei.jvm.instruction.base.UInt16Instruction;
 import cn.yusei.jvm.runtimespace.method.ClassRef;
 import cn.yusei.jvm.runtimespace.method.RTConstantPool;

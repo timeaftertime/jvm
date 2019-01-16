@@ -65,7 +65,7 @@ public class LoadInstructionsTest {
 	@BeforeClass
 	public static void beforeClass() {
 		for (int i = 0; i < 5; i++)
-			refs[i] = new ObjectRef();
+			refs[i] = ObjectRef.newObject(null, 0);
 	}
 
 	@Before

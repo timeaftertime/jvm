@@ -20,4 +20,9 @@ public class Slot {
 		return ref;
 	}
 
+	@Override
+	public String toString() {
+		return "Slot [value=" + value + ", ref=" + ref + "]";
+	}
+
 }

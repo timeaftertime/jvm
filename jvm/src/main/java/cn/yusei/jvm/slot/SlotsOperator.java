@@ -1,5 +1,7 @@
 package cn.yusei.jvm.slot;
 
+import java.util.Arrays;
+
 import cn.yusei.jvm.ObjectRef;
 
 public abstract class SlotsOperator {
@@ -79,6 +81,11 @@ public abstract class SlotsOperator {
 	protected Slot getSlot(int index) {
 		accessIndexCheck(index, 0);
 		return slots[index];
+	}
+	
+	@Override
+	public String toString() {
+		return Arrays.toString(slots);
 	}
 
 }

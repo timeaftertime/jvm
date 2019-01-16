@@ -2,9 +2,10 @@ package cn.yusei.jvm.instruction.reference;
 
 import java.io.IOException;
 
-import cn.yusei.jvm.ExecuteBytecodeError;
+import cn.yusei.jvm.ClassInfo;
 import cn.yusei.jvm.Field;
 import cn.yusei.jvm.MemberSlots;
+import cn.yusei.jvm.instruction.ExecuteBytecodeError;
 import cn.yusei.jvm.instruction.base.UInt16Instruction;
 import cn.yusei.jvm.runtimespace.method.RTConstantPool;
 import cn.yusei.jvm.runtimespace.stack.Frame;
@@ -21,8 +22,15 @@ public class PUT_STATIC extends UInt16Instruction {
 			e.printStackTrace();
 			throw new ExecuteBytecodeError(e);
 		}
-		if(field.isFinal()) {
-			if(frame.getMethod().getClassInfo() != field.getClassInfo() || frame.getMethod().getName().equals("<clinit>"))
+		ClassInfo classInfo = field.getClassInfo();
+		if (!classInfo.initStarted()) {
+			frame.revertNextPc();
+			classInfo.initClass(frame.getThreadSpace());
+			return;
+		}
+		if (field.isFinal()) {
+			if (frame.getMethod().getClassInfo() != field.getClassInfo()
+					|| !frame.getMethod().getName().equals("<clinit>"))
 				throw new IllegalAccessError();
 		}
 		MemberSlots staticVars = field.getClassInfo().getStaticVars();
@@ -44,6 +52,7 @@ public class PUT_STATIC extends UInt16Instruction {
 			staticVars.setDouble(field.getSlotId(), frame.getOperandStack().popDouble());
 			break;
 		case 'L':
+		case '[':
 			staticVars.setRef(field.getSlotId(), frame.getOperandStack().popRef());
 			break;
 		}

@@ -50,4 +50,13 @@ public class Frame {
 		return method;
 	}
 
+	public void revertNextPc() {
+		resetNextPc(0);
+	}
+
+	@Override
+	public String toString() {
+		return "Frame [method=" + method + ", nextPc=" + nextPc + "]";
+	}
+
 }

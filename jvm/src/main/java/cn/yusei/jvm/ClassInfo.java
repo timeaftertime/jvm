@@ -1,11 +1,14 @@
 package cn.yusei.jvm;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import cn.yusei.jvm.classfile.AccessMask;
 import cn.yusei.jvm.classfile.ClassMetadata;
 import cn.yusei.jvm.classfile.constantpool.ClassConstantInfo;
 import cn.yusei.jvm.classfile.constantpool.ConstantPool;
+import cn.yusei.jvm.runtimespace.ThreadSpace;
 import cn.yusei.jvm.runtimespace.method.RTConstantPool;
 
 public class ClassInfo {
@@ -23,6 +26,12 @@ public class ClassInfo {
 	private int instanceSlotCount;
 	private int staticSlotCount;
 	private MemberSlots staticVars;
+	private boolean initStarted = false;
+
+	private static List<String> primitiveTypes = Arrays.asList("V", "Z", "B", "C", "I", "F", "D");
+
+	private ClassInfo() {
+	};
 
 	public ClassInfo(ClassInfoLoader loader, ClassMetadata metadata) {
 		this.loader = loader;
@@ -33,6 +42,17 @@ public class ClassInfo {
 		parseAccessMask(metadata);
 		parseFields(metadata, pool);
 		parseMethods(metadata, pool);
+	}
+
+	public static ClassInfo newArrayClassInfo(ClassInfoLoader loader, String className) {
+		ClassInfo classInfo = new ClassInfo();
+		classInfo.loader = loader;
+		classInfo.access = new AccessMask(AccessMask.ACC_PUBLIC);
+		classInfo.name = className;
+		classInfo.superName = "java.lang.Object";
+		classInfo.interfacesName = new String[] { "java.lang.Cloneable", "java.io.Serializable" };
+		classInfo.startInit();
+		return classInfo;
 	}
 
 	private void parseConstantPool(ClassMetadata metadata) {
@@ -131,6 +151,14 @@ public class ClassInfo {
 	public Field[] getFields() {
 		return fields;
 	}
+	
+	public Field getField(String name, String descriptor) {
+		for(Field field : fields) {
+			if(field.getName().equals(name) && field.getDescriptor().equals(descriptor))
+				return field;
+		}
+		return null;
+	}
 
 	public Method[] getMethods() {
 		return methods;
@@ -199,27 +227,81 @@ public class ClassInfo {
 		return ((ClassInfo) obj).name.equals(name);
 	}
 
-	public boolean isSubClassOf(ClassInfo toClass) throws ClassNotFoundException, IOException {
-		for(ClassInfo nowClass = superClassInfo; nowClass!= null; nowClass = nowClass.superClassInfo)
-			if(toClass.equals(nowClass))
-				return  true;
+	public boolean isSubClassOf(ClassInfo toClass) {
+		for (ClassInfo nowClass = superClassInfo; nowClass != null; nowClass = nowClass.superClassInfo)
+			if (toClass.equals(nowClass))
+				return true;
 		return false;
 	}
 
 	public ObjectRef newObjectRef() {
-		return new ObjectRef(this, getInstanceSlotCount());
+		return ObjectRef.newObject(this, getInstanceSlotCount());
 	}
 
-	public boolean isAssignableFrom(ClassInfo toClass) throws ClassNotFoundException, IOException {
-		if(this.equals(toClass))
+	/**
+	 * 以当前类型创建一个数组，当前类型必须是一个数组
+	 * 
+	 * @param length
+	 * @return
+	 */
+	public ObjectRef newObjectRefAsArray(int length) {
+		if (!isArray())
+			throw new RuntimeException(getName() + "不是数组类型");
+		return ObjectRef.newArray(this, length);
+	}
+	
+	/**
+	 * 创建当前类型的数组
+	 * 
+	 * @param length
+	 * @return
+	 */
+	public ObjectRef newObjectRefArray(int length) {
+		return ObjectRef.newArray(getClassFromLoader(getArrayClassName()), length);
+	}
+
+	private String getArrayClassName() {
+		if (getName().charAt(0) == '[' || primitiveTypes.contains(getName()))
+			return "[" + getName();
+		return "[L" + getName() + ";";
+	}
+
+	/**
+	 * 是否与参数的类或接口相同，或者是其超类或超接口
+	 * @param toClass
+	 * @return
+	 */
+	public boolean isAssignableFrom(ClassInfo toClass) {
+		if (this == toClass)
 			return true;
-		if (toClass.isInterface()) {
-			return isImplements(toClass);
-		} else
-			return isSubClassOf(toClass);
+		if(!toClass.isArray()) {
+			if(!toClass.isInterface()) {
+				if(!isInterface())
+					return toClass.isSubClassOf(this);
+				else
+					return toClass.isImplements(this);
+			}
+			else {
+				if(!isInterface())
+					return getName().equals("java.lang.Object");
+				else
+					return toClass.isImplements(this);
+			}
+		}
+		else {
+			if(!isArray()) {
+				if(!isInterface())
+					return getName().equals("java.lang.Object");
+				else
+					return getName().equals("java.lang.Cloneable") || getName().equals("java.io.Serializable");
+			}
+			else {
+				return getElementClass().isAssignableFrom(toClass.getElementClass());
+			}
+		}
 	}
 
-	private boolean isImplements(ClassInfo toClass) {
+	public boolean isImplements(ClassInfo toClass) {
 		for (ClassInfo info = this; info != null; info = info.getSuperClassInfo()) {
 			for (ClassInfo inter : info.interfacesClassInfo) {
 				if (inter == toClass || info.isImplements(toClass))
@@ -227,6 +309,85 @@ public class ClassInfo {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		return getName();
+	}
+
+	public void startInit() {
+		initStarted = true;
+	}
+
+	public boolean initStarted() {
+		return initStarted;
+	}
+
+	public void initClass(ThreadSpace threadSpace) {
+		startInit();
+		scheduleClinit(threadSpace);
+		initSuperClass(threadSpace);
+	}
+
+	private void scheduleClinit(ThreadSpace threadSpace) {
+		Method clinit = getClinitMethod();
+		if (clinit != null)
+			threadSpace.pushFrame(clinit);
+	}
+
+	private Method getClinitMethod() {
+		return getStaticMethod("<clinit>", "()V");
+	}
+
+	private Method getStaticMethod(String name, String descriptor) {
+		for (Method method : methods) {
+			if (!method.isStatic())
+				continue;
+			if (method.getName().equals(name) && method.getDescriptor().equals(descriptor))
+				return method;
+		}
+		return null;
+	}
+
+	private void initSuperClass(ThreadSpace threadSpace) {
+		if (superClassInfo != null && !superClassInfo.initStarted())
+			superClassInfo.initClass(threadSpace);
+	}
+
+	public ClassInfo getElementClass() {
+		return getClassFromLoader(getElementClassName());
+	}
+
+	private String getElementClassName() {
+		String elementClassName = getName().substring(1);
+		if (elementClassName.charAt(0) == '[')
+			return elementClassName;
+		if (elementClassName.charAt(0) == 'L')
+			return elementClassName.substring(1, elementClassName.length() - 1);
+		if (primitiveTypes.contains(elementClassName))
+			return elementClassName;
+		throw new RuntimeException(getName() + "不是数组类型");
+	}
+
+	public boolean isArray() {
+		return getName().startsWith("[");
+	}
+
+	private ClassInfo getClassFromLoader(String className) {
+		try {
+			return loader.loadClass(className);
+		} catch (ClassNotFoundException | IOException e) {
+			throw new RuntimeException("获取类信息 " + className + " 失败");
+		}
+	}
+
+	public Method getMethod(String name, String descriptor) {
+		for(Method method : methods) {
+			if(method.getName().equals(name) && method.getDescriptor().equals(descriptor))
+				return method;
+		}
+		return null;
 	}
 
 }

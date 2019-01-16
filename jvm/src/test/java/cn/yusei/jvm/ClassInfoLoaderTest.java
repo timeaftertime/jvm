@@ -1,15 +1,17 @@
 package cn.yusei.jvm;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class ClassLoaderTest {
+public class ClassInfoLoaderTest {
 
 	private ClassInfoLoader loader;
 	private ClassInfo info;
@@ -19,7 +21,7 @@ public class ClassLoaderTest {
 		loader = new ClassInfoLoader() {
 			@Override
 			protected String getDefaultClassPath() {
-				return ClassLoaderTest.class.getResource("/").getPath().substring(1);
+				return ClassInfoLoaderTest.class.getResource("/").getPath().substring(1);
 			}
 		};
 		info = loader.loadClass("cn.yusei.ClassTest");
@@ -56,4 +58,20 @@ public class ClassLoaderTest {
 		assertNotNull(loader.loadClass("java.lang.Object"));
 	}
 
+	@Test
+	public void loadArrayClass() throws ClassNotFoundException, IOException {
+		ClassInfo classInfo = loader.loadClass("[I");
+		assertEquals("[I", classInfo.getName());
+		assertTrue(classInfo.initStarted());
+		assertEquals("java.lang.Object", classInfo.getSuperName());
+		assertArrayEquals(new String[] { "java.lang.Cloneable", "java.io.Serializable" },
+				classInfo.getInterfacesName());
+	}
+
+	@Test
+	public void allocateAndInitStringStaticVar() throws ClassNotFoundException, IOException {
+		ClassInfo classInfo = loader.loadClass("cn.yusei.StringStaticVar");
+		Field field = classInfo.getField("hello", "Ljava/lang/String;");
+		assertArrayEquals("HELLO!".toCharArray(), classInfo.getStaticVars().getString(field.getSlotId()).toCharArray());
+	}
 }

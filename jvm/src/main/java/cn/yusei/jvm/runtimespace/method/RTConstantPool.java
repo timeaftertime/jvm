@@ -6,6 +6,7 @@ import cn.yusei.jvm.classfile.constantpool.ConstantInfo;
 import cn.yusei.jvm.classfile.constantpool.ConstantPool;
 import cn.yusei.jvm.classfile.constantpool.ConstantTag;
 import cn.yusei.jvm.classfile.constantpool.FieldrefConstantInfo;
+import cn.yusei.jvm.classfile.constantpool.InterfaceMethodrefConstantInfo;
 import cn.yusei.jvm.classfile.constantpool.MethodrefConstantInfo;
 import cn.yusei.jvm.classfile.constantpool.ValueConstantInfo;
 
@@ -37,6 +38,9 @@ public class RTConstantPool {
 				break;
 			case ConstantTag.METHODREF:
 				constants[i] = new MethodRef(pool, this, (MethodrefConstantInfo) constant);
+				break;
+			case ConstantTag.INTERFACE_METHODREF:
+				constants[i] = new InterfaceMethodref(pool, this, (InterfaceMethodrefConstantInfo) constant);
 				break;
 			}
 			if (constant.getTag() == ConstantTag.LONG || constant.getTag() == ConstantTag.DOUBLE)
@@ -80,6 +84,10 @@ public class RTConstantPool {
 		return (MethodRef) constants[index];
 	}
 
+	public InterfaceMethodref getInterfaceMethodRef(int index) {
+		return (InterfaceMethodref) constants[index];
+	}
+
 	public int size() {
 		return constants.length;
 	}
@@ -87,4 +95,5 @@ public class RTConstantPool {
 	public ClassInfo getClassInfo() {
 		return classInfo;
 	}
+
 }

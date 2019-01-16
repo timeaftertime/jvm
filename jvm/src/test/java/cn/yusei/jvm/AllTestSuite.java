@@ -11,9 +11,8 @@ import cn.yusei.jvm.runtimespace.RuntimeSpaceTestSuite;
 import cn.yusei.jvm.slot.SlotTestSuite;
 
 @RunWith(Suite.class)
-@SuiteClasses({ JVMTest.class, CommandLineTestSuite.class, ClassFileTestSuite.class, RuntimeSpaceTestSuite.class,
-		InstructionTestSuite.class, InterpreterTest.class, ClassInfoTest.class, ClassLoaderTest.class,
-		SlotTestSuite.class })
+@SuiteClasses({ CommandLineTestSuite.class, ClassFileTestSuite.class, RuntimeSpaceTestSuite.class,
+		InstructionTestSuite.class, SlotTestSuite.class, JVMTestSuite.class })
 public class AllTestSuite {
 
 }

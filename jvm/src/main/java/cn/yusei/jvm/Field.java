@@ -43,5 +43,10 @@ public class Field extends Member {
 	public int getConstantValueIndex() {
 		return constantValueIndex;
 	}
+	
+	@Override
+	public String toString() {
+		return getClassInfo().toString() + "." + getName() + " " + getDescriptor();
+	}
 
 }

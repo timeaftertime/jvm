@@ -12,10 +12,10 @@ public class UnparsedAttribute extends Attribute {
 	}
 
 	private byte[] info;
-	
+
 	@Override
 	public void readInfo(int attrLen, DataInputStream data, ConstantPool constantPool) throws IOException {
-		info = new byte[attrLen];
+		info = new byte[length];
 		data.read(info);
 	}
 

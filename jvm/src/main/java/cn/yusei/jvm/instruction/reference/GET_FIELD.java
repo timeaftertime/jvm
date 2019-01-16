@@ -3,9 +3,9 @@ package cn.yusei.jvm.instruction.reference;
 import java.io.IOException;
 
 import cn.yusei.jvm.ClassInfo;
-import cn.yusei.jvm.ExecuteBytecodeError;
 import cn.yusei.jvm.Field;
 import cn.yusei.jvm.ObjectRef;
+import cn.yusei.jvm.instruction.ExecuteBytecodeError;
 import cn.yusei.jvm.instruction.base.UInt16Instruction;
 import cn.yusei.jvm.runtimespace.method.RTConstantPool;
 import cn.yusei.jvm.runtimespace.stack.Frame;
@@ -57,13 +57,16 @@ public class GET_FIELD extends UInt16Instruction {
 			frame.getOperandStack().pushDouble(ref.getMembers().getDouble(field.getSlotId()));
 			break;
 		}
-		case 'L': {
+		case 'L':
+		case '[': {
 			ObjectRef ref = frame.getOperandStack().popRef();
 			if (ref == null)
 				throw new NullPointerException();
 			frame.getOperandStack().pushRef(ref.getMembers().getRef(field.getSlotId()));
 			break;
 		}
+		default:
+			throw new RuntimeException("非法类型描述符：" + field.getDescriptor());
 		}
 	}
 

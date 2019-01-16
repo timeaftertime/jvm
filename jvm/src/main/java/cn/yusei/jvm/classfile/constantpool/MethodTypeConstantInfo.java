@@ -1,8 +1,11 @@
 package cn.yusei.jvm.classfile.constantpool;
 
 import java.io.DataInputStream;
+import java.io.IOException;
 
 public class MethodTypeConstantInfo implements ConstantInfo {
+
+	private int descriptorIndex;
 
 	MethodTypeConstantInfo() {
 	}
@@ -13,8 +16,12 @@ public class MethodTypeConstantInfo implements ConstantInfo {
 	}
 
 	@Override
-	public void readInfo(DataInputStream data, ConstantPool pool) {
-		throw new RuntimeException("暂未实现该常量类型");
+	public void readInfo(DataInputStream data, ConstantPool pool) throws IOException {
+		descriptorIndex = data.readUnsignedShort();
+	}
+
+	public int getDescriptorIndex() {
+		return descriptorIndex;
 	}
 
 }

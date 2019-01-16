@@ -14,6 +14,10 @@ public abstract class SymRef {
 		this.pool = rtPool;
 	}
 	
+	/**
+	 * 引用的是哪个类的成员
+	 * @return
+	 */
 	public abstract String getClassName() ;
 
 	public synchronized ClassInfo resolvedClass() throws ClassNotFoundException, IOException {
@@ -23,6 +27,12 @@ public abstract class SymRef {
 		return ownerClassInfo;
 	}
 
+	/**
+	 * 获取实际引用的那个类的 ClassInfo
+	 * @return
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	private ClassInfo resolveClass() throws ClassNotFoundException, IOException {
 		ClassInfo from = pool.getClassInfo();
 		ClassInfo to = from.getLoader().loadClass(getClassName());

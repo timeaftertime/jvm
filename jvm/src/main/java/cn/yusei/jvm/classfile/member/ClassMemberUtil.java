@@ -18,6 +18,8 @@ public final class ClassMemberUtil {
 		for (int i = 0; i < attributeCount; i++) {
 			int attrNameIndex = data.readUnsignedShort();
 			int attrLen = data.readInt();
+			// if (attrLen == 0)
+			// continue;
 			String attrName = constantPool.getUTF8(attrNameIndex).getValue();
 			Attribute attribute = AttributeFactory.createAttribute(attrNameIndex, attrName, attrLen);
 			attribute.readInfo(attrLen, data, constantPool);

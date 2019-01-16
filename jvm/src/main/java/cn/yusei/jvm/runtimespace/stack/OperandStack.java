@@ -90,4 +90,13 @@ public class OperandStack extends SlotsOperator {
 		size--;
 		return getSlot(size);
 	}
+
+	/**
+	 * 获取从栈顶开始第 index（>0） 个Slot 的 ObjectRef （不弹出栈）
+	 * @param index
+	 * @return
+	 */
+	public ObjectRef getRefFromTop(int index) {
+		return getRef(size - index);
+	}
 }

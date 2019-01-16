@@ -25,6 +25,7 @@ public class GetStaticTest {
 		getstatic = new GET_STATIC();
 		reader = new BytecodeReader(codes);
 		ClassInfo info = new ClassInfoLoader().loadClass("cn.yusei.PutAndGetField");
+		info.startInit();
 		frame = new Frame(null, info.getMethods()[1]);
 	}
 
