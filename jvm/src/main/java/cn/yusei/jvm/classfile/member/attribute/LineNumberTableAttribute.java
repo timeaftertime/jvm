@@ -22,7 +22,10 @@ public class LineNumberTableAttribute extends Attribute {
 			int lineNumber = data.readUnsignedShort();
 			lineNumberTables[i] = new LineNumberTable(startPc, lineNumber);
 		}
+	}
 
+	public LineNumberTable[] getLineNumberTables() {
+		return lineNumberTables;
 	}
 
 }

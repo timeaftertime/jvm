@@ -2,6 +2,7 @@ package cn.yusei.jvm;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -23,11 +24,11 @@ public class ClassInfoTest {
 	@Before
 	public void setUp() throws ClassNotFoundException, IOException {
 		loader = new ClassInfoLoader();
-		String[] classPath = new String[] {ClassInfoTest.class.getResource("/").getPath().substring(1)};
+		String[] classPath = new String[] { ClassInfoTest.class.getResource("/").getPath().substring(1) };
 		metadata = new ClassMetadata(new ClassReader(classPath).readClass("cn.yusei.ClassTest"));
 		classInfo = new ClassInfo(null, metadata);
 	}
-	
+
 	@Test
 	public void copyValueConstants() {
 		ConstantPool pool = metadata.getConstanPool();
@@ -36,8 +37,9 @@ public class ClassInfoTest {
 		int interfaceCount = metadata.getInterfaceCount();
 		String[] interfacesName = classInfo.getInterfacesName();
 		assertEquals(0, interfacesName.length);
-		for(int i=0; i<interfaceCount; i++)
-			assertEquals(pool.getUTF8(pool.getClassInfo(metadata.getInterfaceIndex(i)).getNameIndex()).getValue(), interfacesName[i]);
+		for (int i = 0; i < interfaceCount; i++)
+			assertEquals(pool.getUTF8(pool.getClassInfo(metadata.getInterfaceIndex(i)).getNameIndex()).getValue(),
+					interfacesName[i]);
 		assertEquals(metadata.getAccessMask().isPublic(), classInfo.isPublic());
 		assertEquals(metadata.getAccessMask().isFinal(), classInfo.isFinal());
 		assertEquals(metadata.getAccessMask().isSuper(), classInfo.isSuper());
@@ -47,12 +49,12 @@ public class ClassInfoTest {
 		assertEquals(metadata.getAccessMask().isAnnotation(), classInfo.isAnnotation());
 		assertEquals(metadata.getAccessMask().isEnum(), classInfo.isEnum());
 	}
-	
+
 	@Test
 	public void copyMemberConstants() {
 		Field[] fields = classInfo.getFields();
 		assertEquals(8, fields.length);
-		for(int i=0; i<fields.length; i++) {
+		for (int i = 0; i < fields.length; i++) {
 			ClassMember field = metadata.getFieldClassMember(fields[i].getName(), fields[i].getDescriptor());
 			assertEquals(field.getAccessMask().isPublic(), fields[i].isPublic());
 			assertEquals(field.getAccessMask().isPrivate(), fields[i].isPrivate());
@@ -65,7 +67,7 @@ public class ClassInfoTest {
 			assertEquals(field.getAccessMask().isEnum(), fields[i].isEnum());
 		}
 		Method[] methods = classInfo.getMethods();
-		for(int i=0; i<methods.length; i++) {
+		for (int i = 0; i < methods.length; i++) {
 			ClassMember method = metadata.getMethodClassMember(methods[i].getName(), methods[i].getDescriptor());
 			assertEquals(method.getAccessMask().isPublic(), methods[i].isPublic());
 			assertEquals(method.getAccessMask().isPrivate(), methods[i].isPrivate());
@@ -82,7 +84,7 @@ public class ClassInfoTest {
 		}
 		assertEquals(2, methods.length);
 	}
-	
+
 	@Test
 	public void assignableFrom() throws ClassNotFoundException, IOException {
 		assertTrue(loader.loadClass("java.lang.Object").isAssignableFrom(loader.loadClass("cn.yusei.ClassTest")));
@@ -97,4 +99,34 @@ public class ClassInfoTest {
 		assertFalse(loader.loadClass("cn.yusei.ClassTest").isAssignableFrom(loader.loadClass("java.lang.Comparable")));
 		assertFalse(loader.loadClass("[Lcn.yusei.ClassTest;").isAssignableFrom(loader.loadClass("[Lcn.yusei.Add;")));
 	}
+
+	@Test
+	public void getSourceFileName() throws ClassNotFoundException, IOException {
+		assertEquals("ClassTest.java", loader.loadClass("cn.yusei.ClassTest").getSourceFileName());
+		assertEquals("Add.java", loader.loadClass("cn.yusei.Add").getSourceFileName());
+		assertEquals("ArrayCopy.java", loader.loadClass("cn.yusei.ArrayCopy").getSourceFileName());
+		assertEquals("Object.java", loader.loadClass("java.lang.Object").getSourceFileName());
+	}
+
+	@Test
+	public void distanceToObject() throws ClassNotFoundException, IOException {
+		assertEquals(0, loader.loadClass("java.lang.Object").distanceToObject());
+		assertEquals(1, loader.loadClass("cn.yusei.ClassTest").distanceToObject());
+		assertEquals(1, loader.loadClass("java.lang.Comparable").distanceToObject());
+		assertEquals(3, loader.loadClass("java.util.ArrayList").distanceToObject());
+		assertEquals(3, loader.loadClass("java.lang.RuntimeException").distanceToObject());
+	}
+
+	@Test
+	public void getJavaClassInfo() {
+		assertNotNull(loader.getJavaClass());
+	}
+	
+	@Test
+	public void getPrimitiveClass() {
+		for(String type : ClassInfo.PRIMITIVE_NAMES) {
+			assertNotNull(loader.getPrimitiveClassInfo(type));
+		}
+	}
+
 }

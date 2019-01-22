@@ -41,17 +41,16 @@ public class AnewArrayTest {
 		stack.pushInt(12);
 		anew_array.execute(frame);
 		ObjectRef popRef = stack.popRef();
-		assertEquals("[Lcn/yusei/MethodInvoke;", popRef.getClassInfo().getName());
+		assertEquals("[Lcn.yusei.MethodInvoke;", popRef.getClassInfo().getName());
 		assertEquals(12, popRef.length());
 		stack.pushInt(-1);
 		try {
 			anew_array.execute(frame);
-		}
-		catch (NegativeArraySizeException e) {
+		} catch (NegativeArraySizeException e) {
 			assertEquals(-1 + "", e.getMessage());
 			return;
 		}
 		fail();
 	}
-	
+
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import cn.yusei.jvm.classfile.member.ClassMember;
 import cn.yusei.jvm.classfile.member.attribute.CodeAttribute;
+import cn.yusei.jvm.classfile.member.attribute.LineNumberTableAttribute;
 import cn.yusei.jvm.runtimespace.method.RTConstantPool;
 
 public class Method extends Member {
@@ -14,6 +15,8 @@ public class Method extends Member {
 	private String[] argsType;
 	private String returnType;
 	private int argsSlotCount;
+	private ExceptionHandler handler;
+	private LineNumberConvert convert;
 
 	public Method(ClassInfo owner, ClassMember member, RTConstantPool pool) {
 		super(owner, member, pool);
@@ -29,10 +32,14 @@ public class Method extends Member {
 		maxStack = attribute.getMaxStack();
 		maxLocal = attribute.getMaxLocal();
 		codes = attribute.getCodes();
+		handler = new ExceptionHandler(attribute.getExceptionAttributes());
+		LineNumberTableAttribute lineNumberAttribute = attribute.getLineNumberAttribute();
+		if (lineNumberAttribute != null)
+			convert = new LineNumberConvert(lineNumberAttribute.getLineNumberTables());
 	}
 
 	private void injectNativeMethod() {
-		maxStack = 1;
+		maxStack = 4;
 		maxLocal = argsSlotCount;
 		// native 方法没有字节码
 		// 这里根据返回类型设置不同的字节码
@@ -67,6 +74,8 @@ public class Method extends Member {
 		int nowIndex = 1;
 		while ((nextArg = getNextArg(nowIndex)) != null) {
 			cnt++;
+			if (nextArg.equals("D") || nextArg.equals("J"))
+				cnt++;
 			args.add(nextArg);
 			nowIndex += nextArg.length();
 		}
@@ -143,6 +152,20 @@ public class Method extends Member {
 	@Override
 	public String toString() {
 		return getClassInfo().toString() + "." + getName() + " " + getDescriptor();
+	}
+
+	public int findExceptionHandler(ClassInfo exception, int pc) {
+		return handler.findExceptionHandler(exception, pc, getClassInfo().getConstantPool());
+	}
+
+	public int convertLineNumber(int pc) {
+		// native 方法没有字节码，自然没有行号
+		if (isNative())
+			return -2;
+		// class 文件中不一定有行号表，决定于编译时的选项
+		if (convert == null)
+			return -1;
+		return convert.convertLineNumber(pc);
 	}
 
 }

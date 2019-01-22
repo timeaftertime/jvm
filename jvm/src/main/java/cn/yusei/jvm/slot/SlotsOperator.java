@@ -7,11 +7,10 @@ import cn.yusei.jvm.ObjectRef;
 public abstract class SlotsOperator {
 
 	private Slot[] slots;
-	
+
 	public SlotsOperator(int capacity) {
 		this.slots = new Slot[capacity];
-		for(int i=0; i<capacity; i++)
-			slots[i] = new Slot(0, null);
+		reset();
 	}
 
 	protected void setInt(int index, int value) {
@@ -47,28 +46,28 @@ public abstract class SlotsOperator {
 		accessIndexCheck(index, 0);
 		return slots[index].getValue();
 	}
-	
+
 	protected long getLong(int index) {
 		accessIndexCheck(index, 1);
 		return ((long) getInt(index) << 32) | (getInt(index + 1) & 0xFFFFFFFFL);
 	}
-	
+
 	protected float getFloat(int index) {
 		return Float.intBitsToFloat(getInt(index));
 	}
-	
+
 	protected double getDouble(int index) {
 		return Double.longBitsToDouble(getLong(index));
 	}
 
 	private void accessIndexCheck(int startIndex, int space) {
 		int endIndex = startIndex + space;
-		if(startIndex < 0 || startIndex >= slots.length)
+		if (startIndex < 0 || startIndex >= slots.length)
 			throw new SlotIndexOutOfBoundsException(startIndex);
-		if(endIndex < 0 || endIndex >= slots.length)
+		if (endIndex < 0 || endIndex >= slots.length)
 			throw new SlotIndexOutOfBoundsException(endIndex);
 	}
-	
+
 	public int getCapacity() {
 		return slots.length;
 	}
@@ -82,7 +81,16 @@ public abstract class SlotsOperator {
 		accessIndexCheck(index, 0);
 		return slots[index];
 	}
-	
+
+	protected void clear() {
+		reset();
+	}
+
+	private void reset() {
+		for (int i = 0; i < slots.length; i++)
+			slots[i] = new Slot(0, null);
+	}
+
 	@Override
 	public String toString() {
 		return Arrays.toString(slots);

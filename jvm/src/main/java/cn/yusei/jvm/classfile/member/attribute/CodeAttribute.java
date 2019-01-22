@@ -64,4 +64,15 @@ public class CodeAttribute extends Attribute {
 		return codes;
 	}
 
+	public ExceptionTableAttribute[] getExceptionAttributes() {
+		return exceptionTables;
+	}
+	
+	public LineNumberTableAttribute getLineNumberAttribute() {
+		for(Attribute attr : attributes) {
+			if(attr instanceof LineNumberTableAttribute)
+				return (LineNumberTableAttribute) attr;
+		}
+		return null;
+	}
 }

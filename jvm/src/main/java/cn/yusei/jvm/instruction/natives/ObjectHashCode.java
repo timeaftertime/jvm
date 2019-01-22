@@ -2,7 +2,7 @@ package cn.yusei.jvm.instruction.natives;
 
 import cn.yusei.jvm.runtimespace.stack.Frame;
 
-public class HashCode implements NativeMethod {
+public class ObjectHashCode implements NativeMethod {
 
 	@Override
 	public void invoke(Frame frame) {

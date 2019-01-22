@@ -38,12 +38,42 @@ public class MethodTest {
 	}
 
 	@Test
+	public void parseMethodDescriptorHaveDoubleAndLong() throws ClassNotFoundException, IOException {
+		Method sum = loader.loadClass("java.lang.Double").getMethod("doubleToRawLongBits", "(D)J");
+		assertEquals(2, sum.getArgsSlotCount());
+		assertTrue(Arrays.equals(new String[] { "D" }, sum.getArgsType()));
+		assertEquals("J", sum.getReturnType());
+	}
+
+	@Test
 	public void injectNativeMethod() throws ClassNotFoundException, IOException {
-		ClassInfo objClass = new ClassInfoLoader().loadClass("java.lang.Object");
+		ClassInfo objClass = loader.loadClass("java.lang.Object");
 		Method method = objClass.getMethod("hashCode", "()I");
-		assertEquals(1, method.getMaxStack());
+		assertEquals(4, method.getMaxStack());
 		assertEquals(method.getArgsSlotCount(), method.getMaxLocal());
 		assertArrayEquals(new byte[] { (byte) 0xfe, (byte) 0xac }, method.getCodes());
+	}
+
+	@Test
+	public void parseExceptionTable() throws ClassNotFoundException, IOException {
+		Method method = loader.loadClass("cn.yusei.ExceptionHandle").getMethod("main", "([Ljava/lang/String;)V");
+		assertEquals(10, method.findExceptionHandler(loader.loadClass("java.lang.RuntimeException"), 2));
+		assertEquals(-1, method.findExceptionHandler(loader.loadClass("java.lang.RuntimeException"), 7));
+		assertEquals(10, method.findExceptionHandler(loader.loadClass("java.lang.RuntimeException"), 5));
+		assertEquals(-1, method.findExceptionHandler(loader.loadClass("java.lang.Exception"), 5));
+		assertEquals(10, method.findExceptionHandler(loader.loadClass("java.lang.ArrayIndexOutOfBoundsException"), 5));
+	}
+
+	@Test
+	public void parseLineNumberTable() throws ClassNotFoundException, IOException {
+		Method method = loader.loadClass("cn.yusei.ExceptionHandle").getMethod("main", "([Ljava/lang/String;)V");
+		assertEquals(14, method.convertLineNumber(10));
+		assertEquals(15, method.convertLineNumber(12));
+		assertEquals(16, method.convertLineNumber(9));
+		assertEquals(10, method.convertLineNumber(0));
+		assertEquals(10, method.convertLineNumber(1));
+		assertEquals(12, method.convertLineNumber(2));
+		assertEquals(-2, loader.loadClass("java.lang.Object").getMethod("hashCode", "()I").convertLineNumber(2));
 	}
 
 }

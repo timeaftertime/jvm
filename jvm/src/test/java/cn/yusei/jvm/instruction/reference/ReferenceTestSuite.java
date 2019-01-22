@@ -9,7 +9,7 @@ import cn.yusei.jvm.instruction.constant.LdcInstructionsTest;
 @RunWith(Suite.class)
 @SuiteClasses({ NewTest.class, PutStaticTest.class, GetStaticTest.class, PutFieldTest.class, GetFieldTest.class,
 		InstanceofTest.class, CheckCastTest.class, LdcInstructionsTest.class, InvokeInstructionsTest.class,
-		NewArrayTest.class, AnewArrayTest.class, ArrayLengthTest.class })
+		NewArrayTest.class, AnewArrayTest.class, ArrayLengthTest.class, AthrowTest.class })
 public class ReferenceTestSuite {
 
 }

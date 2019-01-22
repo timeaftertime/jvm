@@ -59,4 +59,12 @@ public class ThreadSpace {
 		return "ThreadSpace [pc=" + pc + "]";
 	}
 
+	public void clearStack() {
+		stack.clear();
+	}
+
+	public Frame[] getFrames() {
+		return stack.toArray(new Frame[0]);
+	}
+
 }

@@ -181,8 +181,8 @@ public class ClassMetadata {
 		return null;
 	}
 
-	public int getAttributeCount() {
-		return attributes.length;
+	public Attribute[] getAttributes() {
+		return attributes;
 	}
 
 	public int getInterfaceIndex(int index) {

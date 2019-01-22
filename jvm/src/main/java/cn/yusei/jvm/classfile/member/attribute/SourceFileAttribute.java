@@ -23,4 +23,8 @@ public class SourceFileAttribute extends Attribute {
 		sourceFileIndex = data.readUnsignedShort();
 	}
 
+	public int getSourceFileIndex() {
+		return sourceFileIndex;
+	}
+
 }

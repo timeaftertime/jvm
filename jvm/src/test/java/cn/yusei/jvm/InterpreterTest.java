@@ -11,9 +11,10 @@ public class InterpreterTest {
 	@Test
 	public void interpretMethodInvoke() throws IOException, ClassNotFoundException {
 		try {
-			// 遇到 System.out.println 将因为 out 为 null 而退出
 			Interpreter.interpret("cn.yusei.MethodInvoke");
-		} catch (NullPointerException e) {
+		}
+		catch (NullPointerException e) {
+			//TODO 初始化 System 类以去掉使用 System.out 时产生的 NullPointerException 
 			return;
 		}
 		fail();
@@ -22,6 +23,11 @@ public class InterpreterTest {
 	@Test
 	public void interpretAboutArray() throws ClassNotFoundException, IOException {
 		Interpreter.interpret("cn.yusei.InterpretAboutArray");
+	}
+
+	@Test
+	public void printStackTrace() throws ClassNotFoundException, IOException {
+		Interpreter.interpret("cn.yusei.ExceptionStackTrace");
 	}
 
 }

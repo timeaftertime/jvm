@@ -1,6 +1,9 @@
 package cn.yusei.jvm.instruction.constant;
 
+import java.io.IOException;
+
 import cn.yusei.jvm.StringPool;
+import cn.yusei.jvm.instruction.ExecuteBytecodeError;
 import cn.yusei.jvm.instruction.base.UInt16Instruction;
 import cn.yusei.jvm.instruction.base.UInt8Instruction;
 import cn.yusei.jvm.runtimespace.method.ClassRef;
@@ -32,7 +35,14 @@ public class LdcInstructions {
 				// 参考书的做法是为 ClassInfo 类加一个 jClass 字段，引用一个 java.lang.Class 类型对应 ClassInfo 的
 				// ObjectRef，然后该 ObjectRef 加一个 extra 字段，引用该 ClassInfo ，表示 ObjectRef 的类型信息
 				// 直接 getClassInfo 不就能获得类型信息了吗，为什么还要去加个 jClass 字段？
-				// 这里暂不做实现
+				// 这里直接加载 java.lang.Class 的对象
+				try {
+					stack.pushRef(
+							((ClassRef) val).resolvedClass().getLoader().getJavaClass().newObjectRef());
+				} catch (ClassNotFoundException | IOException e) {
+					throw new ExecuteBytecodeError(e);
+				}
+				return;
 			}
 			throw new RuntimeException("暂未实现");
 		}

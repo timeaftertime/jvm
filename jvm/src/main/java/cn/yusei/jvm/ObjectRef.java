@@ -110,6 +110,12 @@ public class ObjectRef {
 		return (ObjectRef[]) elements;
 	}
 
+	public String string() {
+		if (!classInfo.getName().equals("java.lang.String"))
+			throw new IncompatibleClassChangeError("当前类 " + classInfo.getName() + " 不是 java.lang.String");
+		return new String(members.getRef(0).chars());
+	}
+
 	public int length() {
 		return Array.getLength(elements);
 	}
@@ -127,6 +133,32 @@ public class ObjectRef {
 		for (Field field : classInfo.getFields()) {
 			if (field.getName().equals(name) && field.getDescriptor().equals(descriptor))
 				members.setRef(field.getSlotId(), value);
+		}
+	}
+
+	public ObjectRef getRefValue(String name, String descriptor) {
+		Field field = classInfo.getField(name, descriptor);
+		if (field == null)
+			throw new NoSuchFieldError(name + " " + descriptor);
+		return members.getRef(field.getSlotId());
+	}
+
+	public void setStackTrace(StackTrace[] traces) {
+		checkThrowable();
+		this.elements = traces;
+	}
+
+	public StackTrace[] getStackTrace() {
+		checkThrowable();
+		return (StackTrace[]) elements;
+	}
+
+	private void checkThrowable() {
+		try {
+			if (!getClassInfo().isSubClassOf(getClassInfo().getLoader().loadClass("java.lang.Throwable")))
+				throw new IncompatibleClassChangeError(getClassInfo().getName() + " 不是 java.lang.Throwable 的子类");
+		} catch (ClassNotFoundException | IncompatibleClassChangeError | IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 

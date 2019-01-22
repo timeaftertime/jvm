@@ -148,19 +148,19 @@ public class ClassMetadataTest {
 		assertEquals(0, helloMetaData.getFieldMemberCount());
 		assertEquals(0, addMetaData.getFieldMemberCount());
 	}
-	
+
 	@Test
 	public void parseMethodMembers() {
 		assertEquals(2, classTestMetaData.getMethodMemberCount());
 		assertEquals(2, helloMetaData.getMethodMemberCount());
 		assertEquals(3, addMetaData.getMethodMemberCount());
 	}
-	
+
 	@Test
 	public void parseAttributes() {
-		assertEquals(1, classTestMetaData.getAttributeCount());
-		assertEquals(1, helloMetaData.getAttributeCount());
-		assertEquals(1, addMetaData.getAttributeCount());
+		assertEquals(1, classTestMetaData.getAttributes().length);
+		assertEquals(1, helloMetaData.getAttributes().length);
+		assertEquals(1, addMetaData.getAttributes().length);
 	}
 
 }

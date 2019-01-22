@@ -14,6 +14,15 @@ public class Interpreter {
 
 	private static final ClassInfoLoader loader = new ClassInfoLoader();
 
+	private static boolean initialized = false;
+
+	public static synchronized void initSystem(ThreadSpace thread) throws ClassNotFoundException, IOException {
+		if (initialized)
+			return;
+		initialized = true;
+		thread.pushFrame(loader.loadClass("java.lang.System").getMethod("initializeSystemClass", "()V"));
+	}
+
 	public static void interpret(String startClassName) throws IOException, ClassNotFoundException {
 		Method mainMethod;
 		mainMethod = loader.loadClass(startClassName).getMethod(MAIN_METHOD_NAME, MAIN_METHOD_DESCRIPTOR);
@@ -21,6 +30,7 @@ public class Interpreter {
 			throw new NoSuchMethodError(startClassName + " 中找不到 main 方法");
 		ThreadSpace thread = new ThreadSpace();
 		thread.pushFrame(mainMethod);
+		// initSystem(thread);
 		loop(thread, mainMethod.getCodes());
 	}
 

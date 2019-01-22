@@ -16,6 +16,8 @@ public class ClassInfoLoader {
 	private ClassReader reader;
 	private Map<String, ClassInfo> loadedClassInfo;
 
+	private static final String JAVA_CLASS_NAME = "java.lang.Class";
+
 	public ClassInfoLoader() {
 		this(new String[0]);
 	}
@@ -28,10 +30,40 @@ public class ClassInfoLoader {
 		paths.add(getDefaultClassPath());
 		reader = new ClassReader(paths.toArray(new String[0]));
 		loadedClassInfo = new ConcurrentHashMap<>();
+		loadJavaClass();
+		loadPrimitiveClass();
+	}
+
+	private void loadJavaClass() {
+		try {
+			loadClass(JAVA_CLASS_NAME);
+		} catch (ClassNotFoundException | IOException e) {
+			throw new RuntimeException("加载 " + JAVA_CLASS_NAME + " 失败");
+		}
+	}
+
+	private void loadPrimitiveClass() {
+		for (String type : ClassInfo.PRIMITIVE_NAMES) {
+			try {
+				loadedClassInfo.put(type, ClassInfo.newPrimitiveClass(this, type));
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException("加载基础类型 " + type + " 失败");
+			}
+		}
 	}
 
 	protected String getDefaultClassPath() {
 		return ClassInfoLoader.class.getResource("/").getPath().substring(1);
+	}
+
+	public ClassInfo getJavaClass() {
+		return loadedClassInfo.get(JAVA_CLASS_NAME);
+	}
+
+	public ClassInfo getPrimitiveClassInfo(String className) {
+		if (!ClassInfo.PRIMITIVE_NAMES.contains(className))
+			throw new RuntimeException(className + " 不是基本类型");
+		return loadedClassInfo.get(className);
 	}
 
 	public ClassInfo loadClass(String className) throws ClassNotFoundException, IOException {
@@ -43,7 +75,7 @@ public class ClassInfoLoader {
 	}
 
 	private ClassInfo load(String className) throws ClassNotFoundException, IOException {
-		if(className.startsWith("["))
+		if (className.startsWith("["))
 			return loadArrayClass(toSlashSplitClassName(className));
 		// 加载
 		byte[] classByte = readClass(className);
@@ -55,7 +87,7 @@ public class ClassInfoLoader {
 	private String toSlashSplitClassName(String className) {
 		return className.replace(".", "/");
 	}
-	
+
 	private ClassInfo loadArrayClass(String className) {
 		return ClassInfo.newArrayClassInfo(this, className);
 	}
@@ -151,7 +183,8 @@ public class ClassInfoLoader {
 			staticVars.setDouble(field.getSlotId(), pool.getDouble(field.getConstantValueIndex()));
 			break;
 		case "Ljava/lang/String;":
-			staticVars.setRef(field.getSlotId(), StringPool.getString(this, pool.getString(field.getConstantValueIndex())));
+			staticVars.setRef(field.getSlotId(),
+					StringPool.getString(this, pool.getString(field.getConstantValueIndex())));
 			break;
 		}
 	}
@@ -170,4 +203,5 @@ public class ClassInfoLoader {
 		}
 		classInfo.setInterfacesClassInfo(infos);
 	}
+
 }

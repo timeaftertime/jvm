@@ -51,6 +51,18 @@ public class JVMTest {
 	public void startJVM() throws ClassNotFoundException, IOException {
 		JVM.main(new String[] { "-cp", JVMTest.class.getResource("/").getPath().substring(1),
 				"cn.yusei.InterpretAboutArray" });
+		assertEquals("", new String(out.toByteArray()));
+	}
+
+	@Test
+	public void printStackTraces() throws ClassNotFoundException, IOException {
+		String result = "java.lang.RuntimeException:这是异常信息~\r\n"
+				+ "	at cn.yusei.ExceptionStackTrace.fun3 (ExceptionStackTrace.java:18)\r\n"
+				+ "	at cn.yusei.ExceptionStackTrace.fun2 (ExceptionStackTrace.java:14)\r\n"
+				+ "	at cn.yusei.ExceptionStackTrace.fun1 (ExceptionStackTrace.java:10)\r\n"
+				+ "	at cn.yusei.ExceptionStackTrace.main (ExceptionStackTrace.java:7)\r\n";
+		JVM.main(new String[] { "cn.yusei.ExceptionStackTrace" });
+		assertEquals(result, new String(out.toByteArray()));
 	}
 
 }

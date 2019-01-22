@@ -135,6 +135,7 @@ import cn.yusei.jvm.instruction.math.XorInstructions.IXOR;
 import cn.yusei.jvm.instruction.math.XorInstructions.LXOR;
 import cn.yusei.jvm.instruction.reference.ANEW_ARRAY;
 import cn.yusei.jvm.instruction.reference.ARRAY_LENGTH;
+import cn.yusei.jvm.instruction.reference.ATHROW;
 import cn.yusei.jvm.instruction.reference.CHECK_CAST;
 import cn.yusei.jvm.instruction.reference.GET_FIELD;
 import cn.yusei.jvm.instruction.reference.GET_STATIC;
@@ -341,7 +342,7 @@ public final class InstructionFactory {
 		static NoOperandInstruction areturn = new ARETURN();
 		static NoOperandInstruction _return = new RETURN();
 		static NoOperandInstruction arraylength = new ARRAY_LENGTH();
-		// static NoOperandInstruction athrow = new ATHROW();
+		static NoOperandInstruction athrow = new ATHROW();
 		// static NoOperandInstruction monitorenter = new MONITOR_ENTER();
 		// static NoOperandInstruction monitorexit = new MONITOR_EXIT();
 		static NoOperandInstruction invoke_native = new INVOKE_NATIVE();
@@ -731,8 +732,8 @@ public final class InstructionFactory {
 			return new ANEW_ARRAY();
 		case 0xbe:
 			return NoOperandInstructionsHolder.arraylength;
-		// case 0xbf:
-		// return NoOperandInstructionsHolder.athrow;
+		case 0xbf:
+			return NoOperandInstructionsHolder.athrow;
 		case 0xc0:
 			return new CHECK_CAST();
 		case 0xc1:
