@@ -17,7 +17,7 @@ public class ThrowableFillInStackTrace implements NativeMethod {
 	}
 
 	private StackTrace[] createStackTrace(ObjectRef ex, ThreadSpace thread) {
-		// 此时在 jvm 栈中，发生异常的方法桢之上，还有 fillInStackTrace(int) 和 fillStackStack()
+		// 此时在 jvm 栈中，发生异常的方法桢之上，还有 fillInStackTrace(int) 和 fillInStackTrace()
 		// 两层以及这两桢下面，异常类的构造函数，层数决定于其继承层次
 		int skip = ex.getClassInfo().distanceToObject() + 2;
 		Frame[] frames = thread.getFrames();

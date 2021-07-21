@@ -10,7 +10,6 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
-import cn.yusei.jvm.classfile.ClassMetadata;
 import cn.yusei.jvm.classfile.constantpool.ClassConstantInfo;
 import cn.yusei.jvm.classfile.constantpool.ConstantPool;
 import cn.yusei.jvm.classfile.constantpool.DoubleConstantInfo;

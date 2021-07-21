@@ -10,18 +10,16 @@ import org.junit.Test;
 
 import cn.yusei.jvm.ClassInfo;
 import cn.yusei.jvm.ClassInfoLoader;
-import cn.yusei.jvm.runtimespace.method.RTConstantPool;
-import cn.yusei.jvm.runtimespace.method.SymRef;
 
 public class SymRefTest {
 
-	private RTConstantPool pool; 
-	
+	private RTConstantPool pool;
+
 	@Before
 	public void setUp() throws ClassNotFoundException, IOException {
 		pool = new ClassInfoLoader().loadClass("cn.yusei.ClassTest").getConstantPool();
 	}
-	
+
 	@Test
 	public void resolvedClass() throws ClassNotFoundException, IOException {
 		SymRef classRef = pool.getClassRef(5);
@@ -29,5 +27,5 @@ public class SymRefTest {
 		assertEquals(classInfo.getName(), classRef.getClassName().replace("/", "."));
 		assertSame(classInfo, classRef.resolvedClass());
 	}
-	
+
 }

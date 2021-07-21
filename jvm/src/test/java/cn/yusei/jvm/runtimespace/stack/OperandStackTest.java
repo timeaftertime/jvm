@@ -8,9 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cn.yusei.jvm.ObjectRef;
-import cn.yusei.jvm.runtimespace.stack.OperandStack;
-import cn.yusei.jvm.runtimespace.stack.OperandStackEmptyError;
-import cn.yusei.jvm.runtimespace.stack.OperandStackOverflowError;
 import cn.yusei.jvm.slot.Slot;
 
 public class OperandStackTest {
@@ -22,7 +19,7 @@ public class OperandStackTest {
 	public void setUp() {
 		operandStack = new OperandStack(STACK_CAPACITY);
 	}
-	
+
 	@Test
 	public void pushAndPop() {
 		int var1 = 1;
@@ -42,18 +39,16 @@ public class OperandStackTest {
 		assertEquals(var2, operandStack.popLong());
 		assertEquals(var1, operandStack.popInt());
 	}
-	
+
 	@Test
 	public void emptyExceptionAndFullError() {
 		try {
 			operandStack.popInt();
-		}
-		catch (OperandStackEmptyError e1) {
+		} catch (OperandStackEmptyError e1) {
 			try {
-				for(int i=0; i<=STACK_CAPACITY; i++)
+				for (int i = 0; i <= STACK_CAPACITY; i++)
 					operandStack.pushInt(i);
-			}
-			catch (OperandStackOverflowError e2) {
+			} catch (OperandStackOverflowError e2) {
 				return;
 			}
 		}
@@ -67,5 +62,5 @@ public class OperandStackTest {
 		assertEquals(1, slot.getValue());
 		assertSame(null, slot.getRef());
 	}
-	
+
 }

@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cn.yusei.jvm.ObjectRef;
-import cn.yusei.jvm.runtimespace.stack.LocalVarsTable;
 
 public class LocalVarsTableTest {
 

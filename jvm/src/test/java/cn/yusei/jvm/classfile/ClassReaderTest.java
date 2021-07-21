@@ -12,12 +12,10 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.yusei.jvm.classfile.ClassReader;
-
 public class ClassReaderTest {
 
 	private List<String> classPaths;
-	
+
 	@Before
 	public void setUp() {
 		classPaths = new ArrayList<>();
@@ -35,10 +33,10 @@ public class ClassReaderTest {
 		is.close();
 		assertTrue(Arrays.equals(expectedData, classData));
 	}
-	
+
 	@Test
 	public void readFromJarFile() throws ClassNotFoundException, IOException {
 		assertNotNull(new ClassReader(classPaths.toArray(new String[0])).readClass("java.lang.Object"));
 	}
-	
+
 }

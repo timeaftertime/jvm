@@ -25,8 +25,10 @@ public class ClassInfoLoader {
 	public ClassInfoLoader(String[] classPaths) {
 		HashSet<String> paths = new HashSet<String>();
 		paths.addAll(Arrays.asList(classPaths));
-		paths.addAll(Arrays.asList(System.getenv("classpath").split(File.pathSeparator)));
-		paths.add(System.getenv("JAVA_HOME") + "/jre/lib/rt.jar");
+		if (System.getenv("classpath") != null)
+			paths.addAll(Arrays.asList(System.getenv("classpath").split(File.pathSeparator)));
+		if (System.getenv("JAVA_HOME") != null)
+			paths.add(System.getenv("JAVA_HOME") + "/jre/lib/rt.jar");
 		paths.add(getDefaultClassPath());
 		reader = new ClassReader(paths.toArray(new String[0]));
 		loadedClassInfo = new ConcurrentHashMap<>();

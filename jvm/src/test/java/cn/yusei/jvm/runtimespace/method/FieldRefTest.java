@@ -10,8 +10,6 @@ import org.junit.Test;
 
 import cn.yusei.jvm.ClassInfoLoader;
 import cn.yusei.jvm.Field;
-import cn.yusei.jvm.runtimespace.method.FieldRef;
-import cn.yusei.jvm.runtimespace.method.RTConstantPool;
 
 public class FieldRefTest {
 
@@ -30,5 +28,5 @@ public class FieldRefTest {
 		assertEquals(fieldRef.getDescriptor(), field.getDescriptor());
 		assertSame(field, fieldRef.resolvedField());
 	}
-	
+
 }
